@@ -11,9 +11,9 @@ import { getBaseFloorplan, getFloorplanFromFloorId, getPoiById, getPoisFromFloor
 import FloorSelector, { FloorOptions, floorOptionsFactory } from "./components/FloorSelector";
 import PoiSelector, { PoiOptions, poiOptionsFactory } from "./components/PoiSelector";
 
-const DOMAIN = "https://dashboard.situm.es"
-const EMAIL = 'qa.acanedo2@situm.es'
-const APIKEY = '38d82215de5bc515aa0d95a2c55096d6b1611dcae37677773da2f78521e2aa40'
+const DOMAIN = process.env.REACT_APP_DOMAIN
+const EMAIL = process.env.REACT_APP_EMAIL
+const APIKEY = process.env.REACT_APP_APIKEY
 
 
 
