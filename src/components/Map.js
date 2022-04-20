@@ -94,9 +94,28 @@ const Map = (props) => {
   return (
     <DeckGL
       initialViewState={initialViewState}
-      controller={true}
-      layers={[floorplanLayer, poiLayer]}
-    />
+      layers={[...buildLayers({ image, bounds, poisToShow })]}
+      controller={{
+        touchZoom: true,
+        touchRotate: true,
+        dragRotate: true,
+        inertia: true,
+      }}
+      parameters={{ depthTest: true }}
+      onHover={(object) => !object.layer && setMapCursor("default")}
+      getCursor={({ isDragging }) => {
+        if (isDragging) {
+          // onDrag();
+          return "grabbing";
+        } else return mapCursor;
+      }}
+    >
+      <StaticMap
+        mapboxAccessToken={MAPBOX_API_KEY}
+        mapStyle={"mapbox://styles/situm/ckgal5n8w3d0y19n5ulca0j10"}
+        reuseMaps={true}
+      />
+    </DeckGL>
   );
   //
 };
