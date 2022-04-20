@@ -1,3 +1,4 @@
+import { FlyToInterpolator } from "deck.gl";
 import React, { useEffect, useState } from "react";
 
 import Map, { PoisToShow } from "./components/Map";
@@ -71,7 +72,8 @@ function App() {
       zoom: 18,
       pitch: 25,
       bearing: 0,
-      transitionDuration: 100,
+      transitionDuration: 200,
+      transitionInterpolator: new FlyToInterpolator(),
     });
 
     setBounds([
@@ -93,7 +95,8 @@ function App() {
       zoom: 19,
       pitch: 0,
       bearing: 0,
-      transitionDuration: 100,
+      transitionDuration: 300,
+      transitionInterpolator: new FlyToInterpolator({ speed: 2 }),
     });
   };
 
