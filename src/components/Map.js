@@ -1,3 +1,8 @@
+import {
+  AmbientLight,
+  LightingEffect,
+  _SunLight as SunLight,
+} from "@deck.gl/core";
 import { BitmapLayer, IconLayer } from "@deck.gl/layers";
 import DeckGL from "@deck.gl/react";
 import React, { useEffect, useState } from "react";
@@ -48,7 +53,17 @@ export class PoiToShow {
 }
 
 const MAPBOX_API_KEY = process.env.REACT_APP_MAPBOX_ACCESS_TOKEN;
+const ambientLight = new AmbientLight({
+  color: [255, 255, 255],
+  intensity: 1.0,
+});
 
+const dirLight = new SunLight({
+  timestamp: Date.UTC(2019, 7, 1, 22),
+  color: [255, 255, 255],
+  intensity: 1.0,
+  _shadow: true,
+});
 const buildLayers = ({ bounds, image, poisToShow }) => {
   const floorplanLayer = new BitmapLayer({
     id: "floorplay-layer",
@@ -78,6 +93,11 @@ const buildLayers = ({ bounds, image, poisToShow }) => {
 };
 
 const Map = (props) => {
+  const [effects] = useState(() => {
+    const lightingEffect = new LightingEffect({ ambientLight, dirLight });
+    lightingEffect.shadowColor = [0, 0, 0, 0.5];
+    return [lightingEffect];
+  });
   const [mapCursor, setMapCursor] = useState("default");
   const [image, setImage] = useState(props.img);
   const [initialViewState, setInitialViewState] = useState(
@@ -116,6 +136,7 @@ const Map = (props) => {
           return "grabbing";
         } else return mapCursor;
       }}
+      effects={effects}
     >
       <StaticMap
         mapboxAccessToken={MAPBOX_API_KEY}
