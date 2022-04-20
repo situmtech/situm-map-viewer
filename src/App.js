@@ -1,14 +1,11 @@
 import React, { useEffect, useState } from "react";
 
-import FloorSelector, {
-  FloorOptions,
-  floorOptionsFactory,
-} from "./components/FloorSelector";
 import Map, { PoisToShow } from "./components/Map";
-import PoiSelector, {
-  PoiOptions,
-  poiOptionsFactory,
-} from "./components/PoiSelector";
+import Toolbar from "./components/MapToolbar";
+import FloorSelector, {
+  floorOptionsFactory,
+} from "./components/selectors/FloorSelector";
+import PoiSelector from "./components/selectors/PoiSelector";
 import { buildingFactoryFromJson, poisToPoisToShow } from "./domain/factories";
 import { Building } from "./domain/models";
 import { SitumAPI } from "./domain/persistance";
@@ -34,58 +31,58 @@ function App() {
     pitch: 0,
     bearing: 0,
   });
+  const [loading, setLoading] = useState(true);
   const [bounds, setBounds] = useState([-122.519, 37.7045, -122.355, 37.829]);
-  const [poiOptions, setPoiOptions] = useState(new PoiOptions());
-  const [floorOptions, setFloorOptions] = useState(new FloorOptions());
+  const [poiOptions, setPoiOptions] = useState([]);
+  const [floorOptions, setFloorOptions] = useState([]);
   const [poisToShow, setPoisToShow] = useState(new PoisToShow([]));
   const [building, setBuilding] = useState(new Building());
+  const [buildings, setBuildings] = useState([]);
   const [level, setLevel] = useState(0);
 
-  useEffect(() => {
-    loadData();
-  }, []);
+  const [currentBuilding, setCurrentBuilding] = useState(null);
+  const [currentFloor, setCurrentFloor] = useState(null);
+  const [selectedPoi, setSelectedPoi] = useState(null);
+  const [poiCategories, setPoiCategories] = useState(null);
 
-  async function loadData() {
+  useEffect(async () => {
     const situmAPI = new SitumAPI(EMAIL, APIKEY, DOMAIN);
+    // situmAPI.getPoiCategories().then((l) => setPoiCategories(l));
+    // situmAPI.cartography.getBuildings().then((l) => setBuildings(l));
 
-    const buildingJson = await situmAPI.getBuildingById(BUILDINGID);
-    console.log(buildingJson);
     const poiCategoriesJson = await situmAPI.getPoiCategories();
+    situmAPI.getBuildingById(BUILDINGID).then((b) => {
+      setLoading(false);
+      const building = buildingFactoryFromJson(b, poiCategoriesJson);
+      setBuilding(building);
 
-    const building = buildingFactoryFromJson(buildingJson, poiCategoriesJson);
-    setBuilding(building);
-    setImg(getBaseFloorplan(building));
-    setBuildingView(building);
-    setFloorOptions(floorOptionsFactory(building.floors));
-    setPoiOptions(poiOptionsFactory(building.pois));
-    setPoisToShow(poisToPoisToShow(getPoisFromFloorLevel(building, level)));
-  }
+      setImg(getBaseFloorplan(building));
+      setBuildingView(building);
+      setFloorOptions(floorOptionsFactory(building.floors));
+      setPoiOptions(building.pois);
+      setPoisToShow(poisToPoisToShow(getPoisFromFloorLevel(building, level)));
+    });
+  }, []);
 
   function setBuildingView(building) {
     setInitialViewState({
       longitude: building.geometry.location.lng,
       latitude: building.geometry.location.lat,
-      zoom: 16,
-      pitch: 0,
+      zoom: 18,
+      pitch: 25,
       bearing: 0,
-      transitionDuration: 0,
+      transitionDuration: 100,
     });
 
     setBounds([
-      [building.geometry.corners.sw.lng, building.geometry.corners.sw.lat],
       [building.geometry.corners.se.lng, building.geometry.corners.se.lat],
       [building.geometry.corners.ne.lng, building.geometry.corners.ne.lat],
       [building.geometry.corners.nw.lng, building.geometry.corners.nw.lat],
+      [building.geometry.corners.sw.lng, building.geometry.corners.sw.lat],
     ]);
   }
 
-  function floorSelectorChangeCallback(floorId) {
-    setImg(getFloorplanFromFloorId(building, floorId));
-    setPoisToShow(poisToPoisToShow(getPoisFromFloorId(building, floorId)));
-    setBuildingView(building);
-  }
-
-  function poiSelectorChangeCallback(poiId) {
+  const onPoiSelect = (poiId) => {
     const poi = getPoiById(building, poiId);
     const floorId = poi.position.floor_id;
     setImg(getFloorplanFromFloorId(building, floorId));
@@ -93,38 +90,66 @@ function App() {
     setInitialViewState({
       longitude: poi.position.lng,
       latitude: poi.position.lat,
-      zoom: 18,
+      zoom: 19,
       pitch: 0,
       bearing: 0,
-      transitionDuration: 0,
+      transitionDuration: 100,
     });
-  }
+  };
+
+  const onFloorSelect = (floorId) => {
+    setImg(getFloorplanFromFloorId(building, floorId));
+    setPoisToShow(poisToPoisToShow(getPoisFromFloorId(building, floorId)));
+    setBuildingView(building);
+    setCurrentFloor(floorId);
+  };
 
   return (
     <>
-      <Map
-        img={img}
-        poisToShow={poisToShow}
-        initialViewState={initialViewState}
-        bounds={bounds}
-      />
+      {building && (
+        <Map
+          buildings={buildings}
+          currentBuilding={currentBuilding}
+          currentFloor={currentFloor}
+          selectedPoi={selectedPoi}
+          img={img}
+          poisToShow={poisToShow}
+          initialViewState={initialViewState}
+          bounds={bounds}
+          onPoiSelect={onPoiSelect}
+        />
+      )}
 
-      <div class="selector-container">
-        <div className="selector poi-selector">
-          <h3>{building.name}</h3>
-          <PoiSelector
-            poiOptions={poiOptions}
-            poiCallback={poiSelectorChangeCallback}
-          />
-        </div>
-        <div className="selector floor-selector">
-          <h3>Floors</h3>
+      {loading ? (
+        <div className="loading">Loading cartography…</div>
+      ) : (
+        <>
+          <PoiSelector pois={poiOptions?.pois} onSelect={onPoiSelect} />
           <FloorSelector
-            floorOptions={floorOptions}
-            floorCallback={floorSelectorChangeCallback}
+            active={currentFloor}
+            floors={floorOptions}
+            onSelect={onFloorSelect}
           />
-        </div>
-      </div>
+
+          <Toolbar
+            onIncreaseZoom={() => {
+              setInitialViewState({
+                ...initialViewState,
+                zoom: initialViewState.zoom + 1,
+              });
+            }}
+            onDecreaseZoom={() => {
+              setInitialViewState({
+                ...initialViewState,
+                zoom: initialViewState.zoom - 1,
+              });
+            }}
+            onCenter={() => {
+              setBuildingView(building);
+            }}
+          />
+        </>
+      )}
     </>
   );
 }

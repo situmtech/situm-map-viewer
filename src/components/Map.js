@@ -1,6 +1,7 @@
 import { BitmapLayer, IconLayer } from "@deck.gl/layers";
 import DeckGL from "@deck.gl/react";
 import React, { useEffect, useState } from "react";
+import { Map as StaticMap } from "react-map-gl";
 
 // View Models
 
@@ -46,7 +47,38 @@ export class PoiToShow {
   }
 }
 
+const MAPBOX_API_KEY = process.env.REACT_APP_MAPBOX_ACCESS_TOKEN;
+
+const buildLayers = ({ bounds, image, poisToShow }) => {
+  const floorplanLayer = new BitmapLayer({
+    id: "floorplay-layer",
+    bounds: bounds,
+    image: image,
+    pickable: true,
+    onClick: (info) => console.log(info),
+  });
+
+  const poiLayer = new IconLayer({
+    id: "icon-layer",
+    data: poisToShow,
+    pickable: true,
+    getIcon: (d) => ({
+      url: d.icon,
+      width: 128,
+      height: 128,
+      anchorY: 128,
+      mask: false,
+    }),
+    sizeScale: 5,
+    getPosition: (d) => d.coordinates,
+    getSize: (_d) => 5,
+  });
+
+  return [floorplanLayer, poiLayer];
+};
+
 const Map = (props) => {
+  const [mapCursor, setMapCursor] = useState("default");
   const [image, setImage] = useState(props.img);
   const [initialViewState, setInitialViewState] = useState(
     props.initialViewState
@@ -65,31 +97,6 @@ const Map = (props) => {
       props.poisToShow ? props.poisToShow.toJson() : new PoisToShow().toJson()
     );
   }, [props]);
-
-  const floorplanLayer = new BitmapLayer({
-    id: "floorplay-layer",
-    bounds: bounds,
-    image: image,
-    pickable: true,
-    onClick: (info) => console.log(info),
-  });
-
-  const poiLayer = new IconLayer({
-    id: "icon-layer",
-    data: poisToShow,
-    pickable: true,
-
-    getIcon: (d) => ({
-      url: d.icon,
-      width: 128,
-      height: 128,
-      anchorY: 128,
-      mask: false,
-    }),
-    sizeScale: 5,
-    getPosition: (d) => d.coordinates,
-    getSize: (_d) => 10,
-  });
 
   return (
     <DeckGL
