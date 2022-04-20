@@ -1,0 +1,148 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+div {
+  box-sizing: border-box;
+}
+
+.selector {
+  background-color: White;
+  z-index: 2;
+  width: 20%;
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  max-width: 300px;
+  background-color: white;
+  border: 0 none !important;
+  border-radius: 2px;
+  box-shadow: 0 0 0 1px rgba(63, 63, 68, 0.05),
+    0 1px 3px 0 rgba(63, 63, 68, 0.15);
+
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &__image {
+    max-height: 50px;
+    display:inline-block;
+  }
+
+  &__title {
+    background-color: #F3F4F6;
+    padding: 1rem;
+
+  }
+  &__content {
+    padding-top:1rem;
+    margin: .5rem;
+  }
+
+
+}
+
+.poi-selector {
+  top: 1rem;
+  left: 1rem;
+
+  .selector__content {
+    max-height: 40vh;
+    overflow-y: scroll;
+    display:flex;
+    gap: 1em;
+    justify-content: flex-start;
+    flex-direction: column;
+  }
+
+  &__poi {
+    display:flex;
+    gap: 1em;
+    justify-content: flex-start;
+    cursor: pointer;
+
+    &__icon {
+      width: 20px;
+      height:20px;
+      background: #204CA1;
+      border-radius: 3px;
+    }
+  }
+}
+
+.floor-selector {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width:50px;
+
+  .floor-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    justify-content: center;
+    height: 90vh;
+    align-items: flex-end;
+
+
+    &__floor {
+      padding:1rem;
+      border: 1px solid #ddd;
+      border-radius: 2px;
+      text-decoration: none;
+      background:white;
+      color: black;
+      text-align:center;
+      cursor: pointer;
+
+      :hover {
+        background: lightblue;
+      }
+      .active {
+        background: Gray;
+      }
+    }
+  }
+}
+
+.MuiAutocomplete-popper {
+  display:block;
+}
+
+.map-toolbar {
+  position: absolute;
+  bottom:2rem;
+  right:1rem;
+  display: flex;
+  flex-direction: column;
+  gap:1rem;
+
+  &__button {
+    background: #204CA1;
+    padding: 5px 10px;
+    border-radius: 3px;
+    color: White;
+    cursor: pointer;
+  }
+}
+
+.loading {
+  background: rgba(32, 76, 161, .9);
+  color: White;
+  padding: .5rem 1rem;
+  font-size: .95rem;
+  position: absolute;
+  bottom: 1rem;
+  right: 50%;
+  transform: translate(50%, 0);
+  border-radius: 1rem;
+}
