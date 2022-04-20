@@ -36,16 +36,12 @@ function poiFactoryFromJson(pois, poiCategories) {
       new Poi(
         e.id,
         e.name,
-        new Position(
-          e.buildingId,
-          e.position.floorId,
-          e.position.lat,
-          e.position.lng
-        ),
+        new Position(e.buildingId, e.floorId, e.location.lat, e.location.lng),
         poiCategory
       )
     );
   });
+
   return new Pois(_pois);
 }
 
@@ -87,7 +83,7 @@ export function buildingFactoryFromJson(buildingData, poiCategoryData) {
   );
 
   const poiCategories = new poiCategoryFactory(poiCategoryData);
-  const pois = new poiFactoryFromJson(buildingData.indoorPois, poiCategories);
+  const pois = new poiFactoryFromJson(buildingData.pois, poiCategories);
 
   const geometry = new BuildingGeometry(
     buildingData.location,
