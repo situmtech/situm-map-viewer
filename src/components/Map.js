@@ -140,7 +140,9 @@ const Map = (props) => {
     >
       <StaticMap
         mapboxAccessToken={MAPBOX_API_KEY}
-        mapStyle={"mapbox://styles/situm/ckgal5n8w3d0y19n5ulca0j10"}
+        mapStyle={
+          "https://basemaps.cartocdn.com/gl/positron-nolabels-gl-style/style.json"
+        }
         reuseMaps={true}
       />
     </DeckGL>
