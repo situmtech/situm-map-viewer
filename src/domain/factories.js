@@ -19,7 +19,9 @@ import {
 export function poiCategoryFactory(data) {
   var _poiCategories = [];
   data.forEach((e) =>
-    _poiCategories.push(new PoiCategory(e.id, e.iconUrl, e.selectedIconUrl))
+    _poiCategories.push(
+      new PoiCategory(e.id, e.iconUrl, e.selectedIconUrl, e.color)
+    )
   );
 
   return new PoiCategories(_poiCategories);

@@ -57,12 +57,12 @@ const FloorSelector = (props) => {
 
   return (
     <Autocomplete
-      disablePortal
       id="floor-selector"
+      disablePortal
       options={floorOptions}
       onChange={onFloorChange}
       renderInput={(params) => <TextField {...params} label="Go to floor..." />}
-      sx={{ width: "100%", position: "absolute", bottom: 0, left: 0 }}
+      //sx={{ width: "20%" }}
     />
   );
 };

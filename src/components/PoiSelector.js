@@ -56,13 +56,14 @@ const PoiSelector = (props) => {
 
   return (
     <Autocomplete
-      disablePortal
-      onChange={onPoiChange}
       id="poi-selector"
+      disablePortal
       options={poiOptions}
+      onChange={onPoiChange}
       renderInput={(params) => (
         <TextField {...params} label="Find your favourite shop" />
       )}
+      //sx={{ width: "20%" }}
     />
   );
 };

@@ -33,6 +33,17 @@ export class PoiToShow {
       icon: this.icon,
     };
   }
+
+  getColor() {
+    switch (this.categoryName) {
+      case "Information":
+        return "red";
+      case "Toilet":
+        return "grey";
+      case "Shop":
+        return "green";
+    }
+  }
 }
 
 const Map = (props) => {

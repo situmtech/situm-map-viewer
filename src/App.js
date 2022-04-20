@@ -23,6 +23,7 @@ import {
 const DOMAIN = process.env.REACT_APP_DOMAIN;
 const EMAIL = process.env.REACT_APP_EMAIL;
 const APIKEY = process.env.REACT_APP_APIKEY;
+const BUILDINGID = process.env.REACT_APP_BUILDINGID;
 
 function App() {
   const [img, setImg] = useState(null);
@@ -47,7 +48,8 @@ function App() {
   async function loadData() {
     const situmAPI = new SitumAPI(EMAIL, APIKEY, DOMAIN);
 
-    const buildingJson = await situmAPI.getBuildingById(10194);
+    const buildingJson = await situmAPI.getBuildingById(BUILDINGID);
+    console.log(buildingJson);
     const poiCategoriesJson = await situmAPI.getPoiCategories();
 
     const building = buildingFactoryFromJson(buildingJson, poiCategoriesJson);
@@ -107,15 +109,22 @@ function App() {
         bounds={bounds}
       />
 
-      <PoiSelector
-        poiOptions={poiOptions}
-        poiCallback={poiSelectorChangeCallback}
-      />
-
-      <FloorSelector
-        floorOptions={floorOptions}
-        floorCallback={floorSelectorChangeCallback}
-      />
+      <div class="selector-container">
+        <div className="selector poi-selector">
+          <h3>{building.name}</h3>
+          <PoiSelector
+            poiOptions={poiOptions}
+            poiCallback={poiSelectorChangeCallback}
+          />
+        </div>
+        <div className="selector floor-selector">
+          <h3>Floors</h3>
+          <FloorSelector
+            floorOptions={floorOptions}
+            floorCallback={floorSelectorChangeCallback}
+          />
+        </div>
+      </div>
     </>
   );
 }

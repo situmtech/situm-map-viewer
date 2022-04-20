@@ -127,10 +127,11 @@ export class Pois {
 }
 
 export class PoiCategory {
-  constructor(id, iconUrl, selectedIconUrl) {
+  constructor(id, iconUrl, selectedIconUrl /*, color*/) {
     this.id = id;
     this.iconUrl = iconUrl;
     this.selectedIconUrl = selectedIconUrl;
+    //this.color = color;
   }
 }
 
