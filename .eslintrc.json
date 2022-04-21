@@ -3,7 +3,7 @@
     "parserOptions": { "project": "./tsconfig.json" },
     "env": { "es6": true },
     "ignorePatterns": ["node_modules", "build", "coverage"],
-    "plugins": ["import", "eslint-comments", "functional"],
+    "plugins": ["@typescript-eslint", "import", "eslint-comments", "functional"],
     "extends": [
       "eslint:recommended",
       "plugin:eslint-comments/recommended",
@@ -26,6 +26,8 @@
       "sort-imports": [
         "error",
         { "ignoreDeclarationSort": true, "ignoreCase": true }
-      ]
+      ],
+      // Disable <Fragment> => <> replacement. Feel free to change
+      "react/jsx-fragments": "off"
     }
   }

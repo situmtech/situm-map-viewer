@@ -1,6 +1,6 @@
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 const PoiSelector = ({ pois, onSelect }) => {
   return (

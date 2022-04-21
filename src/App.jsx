@@ -18,10 +18,10 @@ import {
   getPoisFromFloorLevel,
 } from "./domain/usecases";
 
-const DOMAIN = process.env.REACT_APP_DOMAIN;
-const EMAIL = process.env.REACT_APP_EMAIL;
-const APIKEY = process.env.REACT_APP_APIKEY;
-const BUILDINGID = process.env.REACT_APP_BUILDINGID;
+const DOMAIN = import.meta.env.VITE_DOMAIN;
+const EMAIL = import.meta.env.VITE_EMAIL;
+const APIKEY = import.meta.env.VITE_APIKEY;
+const BUILDINGID = import.meta.env.VITE_BUILDINGID;
 
 function App() {
   const [img, setImg] = useState(null);

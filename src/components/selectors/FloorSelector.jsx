@@ -1,9 +1,12 @@
+import React from 'react';
+
 export function floorOptionsFactory(floors) {
   var floorOptions = [];
 
   floors.toArray().forEach((f) => {
     floorOptions.push({ id: f.id, label: f.level });
   });
+
   return floorOptions;
 }
 
