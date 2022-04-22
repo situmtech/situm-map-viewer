@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 export function floorOptionsFactory(floors) {
   var floorOptions = [];
@@ -13,18 +13,19 @@ export function floorOptionsFactory(floors) {
 const FloorSelector = ({ active = "", floors, onSelect }) => {
   return (
     <div className="floor-selector">
-      <div className="floor-list">
+      <div className="floor-selector__content">
         {floors?.map((floor) => (
-          <a
+          <div
             key={`floor-${floor.id}`}
-            href="#"
-            onClick={(e) => {
+            className={`floor-selector__floor ${
+              active == floor.id && "active"
+            }`}
+            onClick={() => {
               onSelect(floor.id);
             }}
-            className={`floor-list__floor ${active == floor.id && "active"}`}
           >
             {floor.label}
-          </a>
+          </div>
         ))}
       </div>
     </div>

@@ -36,13 +36,13 @@ function App() {
   const [bounds, setBounds] = useState([-122.519, 37.7045, -122.355, 37.829]);
   const [poiOptions, setPoiOptions] = useState([]);
   const [floorOptions, setFloorOptions] = useState([]);
-  const [poisToShow, setPoisToShow] = useState(new PoisToShow([]));
+  const [poisToShow, setPoisToShow] = useState(new PoisToShow([])); // pois en el mapa
   const [building, setBuilding] = useState(new Building());
   const [buildings, setBuildings] = useState([]);
-  const [level, setLevel] = useState(0);
+  const [level, setLevel] = useState(0); // numero de floor
 
   const [currentBuilding, setCurrentBuilding] = useState(null);
-  const [currentFloor, setCurrentFloor] = useState(null);
+  const [currentFloor, setCurrentFloor] = useState(null); // objeto floor actual
   const [selectedPoi, setSelectedPoi] = useState(null);
   const [poiCategories, setPoiCategories] = useState(null);
 
@@ -56,7 +56,6 @@ function App() {
       setLoading(false);
       const building = buildingFactoryFromJson(b, poiCategoriesJson);
       setBuilding(building);
-
       setImg(getBaseFloorplan(building));
       setBuildingView(building);
       setFloorOptions(floorOptionsFactory(building.floors));
@@ -85,8 +84,11 @@ function App() {
   }
 
   const onPoiSelect = (poiId) => {
+    debugger;
     const poi = getPoiById(building, poiId);
     const floorId = poi.position.floor_id;
+    setCurrentFloor(building.getFloorById(floorId));
+    setLevel(currentFloor?.level);
     setImg(getFloorplanFromFloorId(building, floorId));
     setPoisToShow(poisToPoisToShow(getPoisFromFloorId(building, floorId)));
     setInitialViewState({
@@ -112,7 +114,7 @@ function App() {
       {building && (
         <Map
           buildings={buildings}
-          currentBuilding={currentBuilding}
+          currentBuilding={building}
           currentFloor={currentFloor}
           selectedPoi={selectedPoi}
           img={img}
@@ -127,7 +129,12 @@ function App() {
         <div className="loading">Loading cartography…</div>
       ) : (
         <>
-          <PoiSelector pois={poiOptions?.pois} onSelect={onPoiSelect} />
+          {selectedPoi ? (
+            <div className="">INFO DEL POI</div>
+          ) : (
+            <PoiSelector pois={poiOptions?.pois} onSelect={onPoiSelect} />
+          )}
+
           <FloorSelector
             active={currentFloor}
             floors={floorOptions}

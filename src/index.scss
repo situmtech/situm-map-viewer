@@ -5,6 +5,7 @@
   --situm-accent-background: white;
   --situm-color-light-gray: #ddd;
   --situm-text-color: Gray;
+  --situm-text-color-select: #1B3278;
 }
 body {
   margin: 0;
@@ -25,7 +26,7 @@ div {
   box-sizing: border-box;
 }
 
-.selector {
+.poi-selector {
   background-color: White;
   z-index: 2;
   width: 20%;
@@ -38,9 +39,16 @@ div {
   border-radius: 2px;
   box-shadow: 0 0 0 1px rgba(63, 63, 68, 0.05),
     0 1px 3px 0 rgba(63, 63, 68, 0.15);
+  top: 1rem;
+  left: 1rem;
 
   ::-webkit-scrollbar {
     width: 6px;
+  }
+
+  &__title {
+    background-color: var(--situm-selector-title-background);
+    padding: 1rem;
   }
 
   &__image {
@@ -48,28 +56,32 @@ div {
     display:inline-block;
   }
 
-  &__title {
-    background-color: var(--situm-selector-title-background);
-    padding: 1rem;
+  &__search {
+    padding-top: 1em;
+    display: flex;
+    flex-direction: row;
 
+    input {
+      width: 80%;
+      padding: .3em;
+      border-radius: .5em;
+    }
+
+    .search-pois__icon {
+      cursor: pointer;
+      padding: .2em;
+      padding-left: .4em;
+    }
   }
+
   &__content {
-    padding-top:1rem;
     margin: .5rem;
-  }
-
-
-}
-
-.poi-selector {
-  top: 1rem;
-  left: 1rem;
-
-  .selector__content {
-    max-height: 40vh;
+    padding-top: 1rem;
+    padding-bottom: 1em;
+    gap: 1em;
+    max-height: 41vh;
     overflow-y: scroll;
     display:flex;
-    gap: 1em;
     justify-content: flex-start;
     flex-direction: column;
   }
@@ -77,9 +89,14 @@ div {
   &__poi {
     display:flex;
     gap: .5em;
+    padding-left: .7em;
     justify-content: flex-start;
     align-items: center;
     cursor: pointer;
+
+    :hover {
+      color: var(--situm-text-color-select);
+    }
 
     &__icon {
       width: 30px;
@@ -88,6 +105,11 @@ div {
       border-radius: 3px;
     }
   }
+
+  &__no-pois {
+    text-align: center;
+  }
+
 }
 
 .floor-selector {
@@ -96,31 +118,34 @@ div {
   right: 1rem;
   width:50px;
 
-  .floor-list {
+  &__content {
     display: flex;
-    flex-direction: column;
-    gap: 1rem;
+    flex-direction: column-reverse;
     justify-content: center;
+    align-items: stretch;
+    text-align: center;
+    gap: 1rem;
     height: 90vh;
-    align-items: flex-end;
+    padding-top: 1rem;
+    padding-bottom: 1em;
+  }
 
+  &__floor {
+    padding: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 2px;
+    text-decoration: none;
+    background:white;
+    color: black;
+    text-align:center;
+    cursor: pointer;
 
-    &__floor {
-      padding:1rem;
-      border: 1px solid #ddd;
-      border-radius: 2px;
-      text-decoration: none;
-      background:white;
-      color: black;
-      text-align:center;
-      cursor: pointer;
+    /*:hover {
+      background: lightblue;
+    }*/
 
-      :hover {
-        background: lightblue;
-      }
-      .active {
-        background: var(--situm-text-color);
-      }
+    .active {
+      background: var(--situm-text-color-select);
     }
   }
 }

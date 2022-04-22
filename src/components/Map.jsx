@@ -40,7 +40,7 @@ export class PoiToShow {
     };
   }
 
-  getColor() {
+  /*getColor() {
     switch (this.categoryName) {
       case "Information":
         return "red";
@@ -49,7 +49,7 @@ export class PoiToShow {
       case "Shop":
         return "green";
     }
-  }
+  }*/
 }
 
 const MAPBOX_API_KEY = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN;
@@ -64,12 +64,14 @@ const dirLight = new SunLight({
   intensity: 1.0,
   _shadow: true,
 });
+
 const buildLayers = ({ bounds, image, poisToShow }) => {
   const floorplanLayer = new BitmapLayer({
     id: "floorplay-layer",
     bounds: bounds,
     image: image,
     pickable: true,
+    //onClick: (info) => console.log(info),
   });
 
   const poiLayer = new IconLayer({
@@ -85,9 +87,9 @@ const buildLayers = ({ bounds, image, poisToShow }) => {
     }),
     sizeScale: 5,
     getPosition: (d) => d.coordinates,
-    getSize: (_d) => 5,
-    onHover: (el) => console.log,
-    onClick: (el) => console.log,
+    getSize: (_d) => 8,
+    /*onHover: (el) => console.log,
+    onClick: (el) => console.log,*/
   });
 
   return [floorplanLayer, poiLayer];
@@ -113,7 +115,6 @@ const Map = (props) => {
     setImage(props.img);
     setInitialViewState(props.initialViewState);
     setBounds(props.bounds);
-
     setPoisToShow(
       props.poisToShow ? props.poisToShow.toJson() : new PoisToShow().toJson()
     );
@@ -131,7 +132,7 @@ const Map = (props) => {
       }}
       parameters={{ depthTest: true }}
       onHover={(object) => !object.layer && setMapCursor("default")}
-      onClick={(object) => console.log}
+      //onClick={(object) => console.log}
       getCursor={({ isDragging }) => {
         if (isDragging) {
           // onDrag();
