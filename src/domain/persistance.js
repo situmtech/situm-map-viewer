@@ -14,6 +14,10 @@ export class SitumAPI {
     });
   }
 
+  /*getBuildings(organizationId) { // TODO: MULTI-EDIFICIO
+    return;
+  }*/
+
   getBuildingById(id) {
     return this.situmSDK.cartography.getBuildingById(id);
   }

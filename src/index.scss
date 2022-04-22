@@ -6,6 +6,7 @@
   --situm-color-light-gray: #ddd;
   --situm-text-color: Gray;
   --situm-text-color-select: #1B3278;
+  --situm-radius: 3px;
 }
 body {
   margin: 0;
@@ -49,28 +50,30 @@ div {
   &__title {
     background-color: var(--situm-selector-title-background);
     padding: 1rem;
-  }
 
-  &__image {
-    max-height: 50px;
-    display:inline-block;
-  }
-
-  &__search {
-    padding-top: 1em;
-    display: flex;
-    flex-direction: row;
-
-    input {
-      width: 80%;
-      padding: .3em;
-      border-radius: .5em;
+    &__image {
+      max-height: 50px;
+      display:inline-block;
     }
 
-    .search-pois__icon {
-      cursor: pointer;
-      padding: .2em;
-      padding-left: .4em;
+    &__search {
+      padding-top: 1em;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 1rem;
+
+      &__input {
+        width: 80%;
+        padding: .5rem 1rem;
+        border-radius: var(--situm-radius);
+        border: 0 none;
+      }
+
+      .search-pois__icon {
+        cursor: pointer;
+        padding: .2em;
+      }
     }
   }
 
@@ -102,7 +105,7 @@ div {
       width: 30px;
       height:30px;
       background: rgb(var(--situm-accent-color));
-      border-radius: 3px;
+      border-radius: var(--situm-radius);
     }
   }
 

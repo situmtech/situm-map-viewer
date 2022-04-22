@@ -33,6 +33,7 @@ export class Building {
 
     return this.pois.filterByFloorId(floorID);
   }
+
   getPoisFromFloorId(floorId) {
     return this.pois.filterByFloorId(floorId);
   }

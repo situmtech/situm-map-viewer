@@ -30,23 +30,23 @@ const PoiSelector = ({ pois, onSelect }) => {
     <div className="poi-selector">
       <div className="poi-selector__title">
         <img
-          className="selector__image"
+          className="poi-selector__title__image"
           src="https://situm.com/wp-content/themes/situm/img/logo-situm.svg"
           alt="Situm"
         />
-        <div className="poi-selector__search">
+        <div className="poi-selector__title__search">
+          <SearchIcon className="search-pois__icon search-icon" />
           <input
             autoFocus
+            className="poi-selector__title__search__input"
             value={filterText}
-            type="text"
+            type="search"
             data-action="search"
             placeholder="Search points of interest..."
             onChange={async (e) => {
               setFilterText(e.target.value);
             }}
           />
-          <SearchIcon className="search-pois__icon search-icon" />
-          <DeleteIcon className="search-pois__icon delete-icon" />
         </div>
       </div>
       <div className="poi-selector__content">

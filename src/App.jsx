@@ -8,7 +8,7 @@ import FloorSelector, {
 } from "./components/selectors/FloorSelector";
 import PoiSelector from "./components/selectors/PoiSelector";
 import { buildingFactoryFromJson, poisToPoisToShow } from "./domain/factories";
-import { Building } from "./domain/models";
+import { Building, Floor, PoiCategories } from "./domain/models";
 import { SitumAPI } from "./domain/persistance";
 import {
   getBaseFloorplan,
@@ -16,6 +16,8 @@ import {
   getPoiById,
   getPoisFromFloorId,
   getPoisFromFloorLevel,
+  getPoisFromBuildingId,
+  getFloorsFromBuildingId,
 } from "./domain/usecases";
 
 const DOMAIN = import.meta.env.VITE_DOMAIN;
@@ -25,6 +27,12 @@ const BUILDINGID = import.meta.env.VITE_BUILDINGID;
 
 function App() {
   const [img, setImg] = useState(null);
+  const [bounds, setBounds] = useState([-122.519, 37.7045, -122.355, 37.829]);
+  const [poiOptions, setPoiOptions] = useState([]);
+  const [floorOptions, setFloorOptions] = useState([]);
+  const [poisToShow, setPoisToShow] = useState(new PoisToShow([]));
+
+  const [loading, setLoading] = useState(true);
   const [initialViewState, setInitialViewState] = useState({
     longitude: -122.519,
     latitude: 37.7045,
@@ -32,35 +40,37 @@ function App() {
     pitch: 0,
     bearing: 0,
   });
-  const [loading, setLoading] = useState(true);
-  const [bounds, setBounds] = useState([-122.519, 37.7045, -122.355, 37.829]);
-  const [poiOptions, setPoiOptions] = useState([]);
-  const [floorOptions, setFloorOptions] = useState([]);
-  const [poisToShow, setPoisToShow] = useState(new PoisToShow([])); // pois en el mapa
-  const [building, setBuilding] = useState(new Building());
-  const [buildings, setBuildings] = useState([]);
-  const [level, setLevel] = useState(0); // numero de floor
-
-  const [currentBuilding, setCurrentBuilding] = useState(null);
-  const [currentFloor, setCurrentFloor] = useState(null); // objeto floor actual
-  const [selectedPoi, setSelectedPoi] = useState(null);
-  const [poiCategories, setPoiCategories] = useState(null);
+  const [buildings, setBuildings] = useState(new Building([])); // object list
+  const [currentBuilding, setCurrentBuilding] = useState(null); // id
+  const [currentFloor, setCurrentFloor] = useState(null); // id
+  const [selectedPoi, setSelectedPoi] = useState(null); // id
+  const [poiCategories, setPoiCategories] = useState([]);
 
   useEffect(async () => {
     const situmAPI = new SitumAPI(EMAIL, APIKEY, DOMAIN);
-    // situmAPI.getPoiCategories().then((l) => setPoiCategories(l));
-    // situmAPI.cartography.getBuildings().then((l) => setBuildings(l));
 
-    const poiCategoriesJson = await situmAPI.getPoiCategories();
+    const poiCategoryData = await situmAPI.getPoiCategories();
+    //setPoiCategories(poiCategoryData);
+    const myBuildings = new Building([]);
+
     situmAPI.getBuildingById(BUILDINGID).then((b) => {
       setLoading(false);
-      const building = buildingFactoryFromJson(b, poiCategoriesJson);
-      setBuilding(building);
-      setImg(getBaseFloorplan(building));
+
+      const building = buildingFactoryFromJson(b, poiCategoryData);
+      myBuildings.add(building);
+      setBuildings(myBuildings);
+
+      setCurrentBuilding(BUILDINGID);
       setBuildingView(building);
+      setCurrentFloor(building.getFloorByLevel(0).id);
+
+      // FUERA
+      setImg(getBaseFloorplan(building));
       setFloorOptions(floorOptionsFactory(building.floors));
       setPoiOptions(building.pois);
-      setPoisToShow(poisToPoisToShow(getPoisFromFloorLevel(building, level)));
+      setPoisToShow(
+        poisToPoisToShow(getPoisFromFloorLevel(building, currentFloor.level))
+      );
     });
   }, []);
 
@@ -75,6 +85,7 @@ function App() {
       transitionInterpolator: new FlyToInterpolator(),
     });
 
+    // FUERA
     setBounds([
       [building.geometry.corners.se.lng, building.geometry.corners.se.lat],
       [building.geometry.corners.ne.lng, building.geometry.corners.ne.lat],
@@ -84,13 +95,9 @@ function App() {
   }
 
   const onPoiSelect = (poiId) => {
-    debugger;
-    const poi = getPoiById(building, poiId);
+    const poi = getPoiById(currentBuilding, poiId);
     const floorId = poi.position.floor_id;
-    setCurrentFloor(building.getFloorById(floorId));
-    setLevel(currentFloor?.level);
-    setImg(getFloorplanFromFloorId(building, floorId));
-    setPoisToShow(poisToPoisToShow(getPoisFromFloorId(building, floorId)));
+    setCurrentFloor(floorId);
     setInitialViewState({
       longitude: poi.position.lng,
       latitude: poi.position.lat,
@@ -100,28 +107,36 @@ function App() {
       transitionDuration: 300,
       transitionInterpolator: new FlyToInterpolator({ speed: 2 }),
     });
+
+    // FUERA
+    setImg(getFloorplanFromFloorId(currentBuilding, floorId));
+    setPoisToShow(
+      poisToPoisToShow(getPoisFromFloorId(currentBuilding, floorId))
+    );
   };
 
   const onFloorSelect = (floorId) => {
-    setImg(getFloorplanFromFloorId(building, floorId));
-    setPoisToShow(poisToPoisToShow(getPoisFromFloorId(building, floorId)));
-    setBuildingView(building);
-    setCurrentFloor(floorId);
+    setImg(getFloorplanFromFloorId(currentBuilding, floorId));
+    setPoisToShow(
+      poisToPoisToShow(getPoisFromFloorId(currentBuilding, floorId))
+    );
+    setBuildingView(currentBuilding);
+    setCurrentFloor(currentBuilding.getFloorById(floorId));
   };
 
   return (
     <>
-      {building && (
+      {currentBuilding && (
         <Map
+          initialViewState={initialViewState}
           buildings={buildings}
-          currentBuilding={building}
+          currentBuilding={currentBuilding}
           currentFloor={currentFloor}
           selectedPoi={selectedPoi}
-          img={img}
-          poisToShow={poisToShow}
-          initialViewState={initialViewState}
-          bounds={bounds}
           onPoiSelect={onPoiSelect}
+          img={img} // FUERA
+          poisToShow={poisToShow}
+          bounds={bounds}
         />
       )}
 
@@ -132,12 +147,15 @@ function App() {
           {selectedPoi ? (
             <div className="">INFO DEL POI</div>
           ) : (
-            <PoiSelector pois={poiOptions?.pois} onSelect={onPoiSelect} />
+            <PoiSelector
+              pois={getPoisFromBuildingId(buildings, BUILDINGID)}
+              onSelect={onPoiSelect}
+            />
           )}
 
           <FloorSelector
             active={currentFloor}
-            floors={floorOptions}
+            floors={getFloorsFromBuildingId(buildings, BUILDINGID)}
             onSelect={onFloorSelect}
           />
 
@@ -155,7 +173,7 @@ function App() {
               });
             }}
             onCenter={() => {
-              setBuildingView(building);
+              setBuildingView(currentBuilding);
             }}
           />
         </>
