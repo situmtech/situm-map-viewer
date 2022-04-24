@@ -5,50 +5,11 @@ import {
 } from "@deck.gl/core";
 import { BitmapLayer, IconLayer } from "@deck.gl/layers";
 import DeckGL from "@deck.gl/react";
+import { FlyToInterpolator } from "deck.gl";
 import React, { useEffect, useState } from "react";
 import { Map as StaticMap } from "react-map-gl";
 
-// View Models
-
-export class PoisToShow {
-  constructor(pois) {
-    this.pois = pois;
-  }
-
-  toJson() {
-    return this.pois?.map((p) => {
-      return p.toJson();
-    });
-  }
-}
-
-export class PoiToShow {
-  constructor(name, lat, lng, icon) {
-    this.name = name;
-    this.lat = lat;
-    this.lng = lng;
-    this.icon = icon;
-  }
-
-  toJson() {
-    return {
-      name: this.name,
-      coordinates: [this.lng, this.lat],
-      icon: this.icon,
-    };
-  }
-
-  /*getColor() {
-    switch (this.categoryName) {
-      case "Information":
-        return "red";
-      case "Toilet":
-        return "grey";
-      case "Shop":
-        return "green";
-    }
-  }*/
-}
+import { getBaseFloorplan, getFloorplanFromFloorId } from "../domain/usecases";
 
 const MAPBOX_API_KEY = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN;
 const ambientLight = new AmbientLight({
@@ -64,57 +25,66 @@ const dirLight = new SunLight({
 });
 
 const buildLayers = ({
-  bounds,
-  image,
   buildings,
   currentBuilding,
   currentFloor,
   onPoiSelect,
   selectedPoi,
 }) => {
-  const floorplanLayer = new BitmapLayer({
-    id: "floorplay-layer",
-    bounds: bounds,
-    image: image,
-    pickable: true,
-  });
+  const layers = [];
+  const building = buildings.find((b) => b.id == currentBuilding);
 
-  let pois = [];
+  if (building) {
+    const image = currentFloor
+      ? getFloorplanFromFloorId(building, currentFloor)
+      : getBaseFloorplan(building);
 
-  if (buildings.length > 0) {
-    const building = buildings.find((b) => b.id == currentBuilding);
-    pois = building.pois.pois.filter(
+    const bounds = [
+      [building.geometry.corners.se.lng, building.geometry.corners.se.lat],
+      [building.geometry.corners.ne.lng, building.geometry.corners.ne.lat],
+      [building.geometry.corners.nw.lng, building.geometry.corners.nw.lat],
+      [building.geometry.corners.sw.lng, building.geometry.corners.sw.lat],
+    ];
+
+    if (image) {
+      layers.push(
+        new BitmapLayer({
+          id: "floorplay-layer",
+          bounds: bounds,
+          image: image,
+          pickable: true,
+        })
+      );
+    }
+
+    const pois = building.pois.pois.filter(
       (el) => el.position.floor_id == currentFloor
     );
+
+    pois.length > 0 &&
+      layers.push(
+        new IconLayer({
+          id: "icon-layer",
+          data: pois,
+          pickable: true,
+          getIcon: (d) => ({
+            url: d.category.iconUrl,
+            width: 128,
+            height: 128,
+            anchorY: 128,
+            mask: false,
+          }),
+          sizeScale: 5,
+          getPosition: (d) => [d.position.lng, d.position.lat],
+          getSize: (_d) => 8,
+          // getColor: (_d) =>
+          //   _d.object.id == selectedPoi ? [0, 0, 0, 255] : [255, 0, 0, 255],
+          onClick: (el) => {
+            onPoiSelect(el.object);
+          },
+        })
+      );
   }
-
-  const poiLayer = new IconLayer({
-    id: "icon-layer",
-    data: pois,
-    pickable: true,
-    getIcon: (d) => ({
-      url: d.category.iconUrl,
-      width: 128,
-      height: 128,
-      anchorY: 128,
-      mask: false,
-    }),
-    sizeScale: 5,
-    getPosition: (d) => [d.position.lng, d.position.lat],
-    getSize: (_d) => 8,
-    // getColor: (_d) => [255, 0, 0, 255],
-    onHover: (el) => console.log,
-    onClick: (el) => {
-      console.log(el.object);
-      onPoiSelect(el.object.id);
-    },
-    visible: (el) => {
-      console.log(el);
-      return el.level == currentFloor;
-    },
-  });
-
-  const layers = [floorplanLayer, poiLayer];
 
   return layers;
 };
@@ -125,9 +95,7 @@ const Map = ({
   currentFloor,
   selectedPoi,
   onPoiSelect,
-  img,
   initialViewState,
-  bounds,
 }) => {
   const [effects] = useState(() => {
     const lightingEffect = new LightingEffect({ ambientLight, dirLight });
@@ -136,25 +104,29 @@ const Map = ({
   });
   const [mapCursor, setMapCursor] = useState("default");
 
-  const [imageInternal, setImage] = useState(img);
-  const [initialViewStateInternal, setInitialViewState] =
-    useState(initialViewState);
-  const [boundsInternal, setBounds] = useState(bounds);
+  const [initialViewStateInternal, setInitialViewState] = useState({
+    longitude: -122.519,
+    latitude: 37.7045,
+    zoom: 13,
+    pitch: 0,
+    bearing: 0,
+  });
   const [layers, setLayers] = useState([]);
 
-  // Start the map
-  // useEffect(() => {
-  //   setImage(buildings[0].floors.find(e => e.level == currentFloor))
-  // }, [buildings, currentBuilding]);
-
   useEffect(() => {
-    setImage(img);
-    setInitialViewState(initialViewState);
-    setBounds(bounds);
+    const building = buildings.find((b) => b.id == currentBuilding);
+
+    if (!building) return;
+
+    setInitialViewState({
+      longitude: building.geometry.location.lng,
+      latitude: building.geometry.location.lat,
+      zoom: 18,
+      transitionDuration: 200,
+      transitionInterpolator: new FlyToInterpolator(),
+    });
     setLayers(
       buildLayers({
-        bounds,
-        image: imageInternal,
         buildings,
         currentBuilding,
         currentFloor,
@@ -162,14 +134,35 @@ const Map = ({
         selectedPoi,
       })
     );
-  }, [
-    img,
-    imageInternal,
-    initialViewState,
-    bounds,
-    currentBuilding,
-    buildings,
-  ]);
+  }, [currentBuilding, currentFloor]);
+
+  useEffect(() => {
+    if (!selectedPoi) return;
+    const building = buildings.find((b) => b.id == currentBuilding);
+    const poi = building.pois.pois.find((p) => p.id == selectedPoi);
+
+    setInitialViewState({
+      ...initialViewStateInternal,
+      longitude: poi.position.lng,
+      latitude: poi.position.lat,
+      zoom: 19,
+      transitionDuration: 300,
+      transitionInterpolator: new FlyToInterpolator({ curve: 3, speed: 1 }),
+    });
+  }, [selectedPoi]);
+
+  useEffect(() => {
+    setInitialViewState(initialViewState);
+    setLayers(
+      buildLayers({
+        buildings,
+        currentBuilding,
+        currentFloor,
+        onPoiSelect,
+        selectedPoi,
+      })
+    );
+  }, [currentBuilding, buildings]);
 
   return (
     <DeckGL
@@ -182,8 +175,7 @@ const Map = ({
         inertia: true,
       }}
       parameters={{ depthTest: true }}
-      onHover={(object) => !object.layer && setMapCursor("default")}
-      //onClick={(object) => console.log}
+      onHover={(object) => !object.layer && setMapCursor("pointer")}
       getCursor={({ isDragging }) => {
         if (isDragging) {
           // onDrag();
@@ -191,6 +183,7 @@ const Map = ({
         } else return mapCursor;
       }}
       effects={effects}
+      getTooltip={({ object }) => object && `${object.name}`}
     >
       <StaticMap
         mapboxAccessToken={MAPBOX_API_KEY}

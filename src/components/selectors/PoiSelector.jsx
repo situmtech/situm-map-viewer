@@ -1,13 +1,30 @@
 import React, { useEffect, useState } from "react";
 import { FaSearch as SearchIcon } from "react-icons/fa";
 
-const PoiSelector = ({ pois, onSelect, currentPoiID }) => {
+const PoiSelector = ({
+  buildings,
+  currentBuilding,
+  onSelect,
+  currentPoiID,
+}) => {
   const [filterText, setFilterText] = useState("");
+  const [pois, setPois] = useState([]);
 
-  return currentPoiID !== null ? (
+  useEffect(() => {
+    setPois(buildings[0]?.pois.pois);
+  }, [buildings]);
+
+  return currentPoiID != null ? (
     <div className="poi-selector">
       <div className="poi-selector__title">
-        {pois.find((poi) => poi.id == currentPoiID).name}
+        <img
+          className="poi-selector__title__image"
+          src="https://situm.com/wp-content/themes/situm/img/logo-situm.svg"
+          alt="Situm"
+        />
+        <div className="poi-selector__title__text">
+          <h3>{pois.find((poi) => poi.id == currentPoiID)?.name}</h3>
+        </div>
       </div>
       <div className="poi-selector__content">
         {JSON.stringify(pois.find((poi) => poi.id == currentPoiID))}
@@ -51,7 +68,7 @@ const PoiSelector = ({ pois, onSelect, currentPoiID }) => {
                 key={`poi-${poi.id}`}
                 className="poi-selector__poi"
                 onClick={() => {
-                  onSelect(poi.id);
+                  onSelect(poi);
                 }}
               >
                 <div className="poi-selector__poi__icon"></div>

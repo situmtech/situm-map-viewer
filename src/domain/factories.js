@@ -1,5 +1,3 @@
-import { PoisToShow, PoiToShow } from "../components/Map";
-
 import {
   Building,
   BuildingGeometry,
@@ -14,6 +12,47 @@ import {
   Position,
 } from "./models";
 
+// View Models
+
+export class PoisToShow {
+  constructor(pois) {
+    this.pois = pois;
+  }
+
+  toJson() {
+    return this.pois?.map((p) => {
+      return p.toJson();
+    });
+  }
+}
+
+export class PoiToShow {
+  constructor(name, lat, lng, icon) {
+    this.name = name;
+    this.lat = lat;
+    this.lng = lng;
+    this.icon = icon;
+  }
+
+  toJson() {
+    return {
+      name: this.name,
+      coordinates: [this.lng, this.lat],
+      icon: this.icon,
+    };
+  }
+
+  /*getColor() {
+    switch (this.categoryName) {
+      case "Information":
+        return "red";
+      case "Toilet":
+        return "grey";
+      case "Shop":
+        return "green";
+    }
+  }*/
+}
 // Domain Factories / Parsers
 
 export function poiCategoryFactory(data) {
