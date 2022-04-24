@@ -1,5 +1,3 @@
-import Autocomplete from "@mui/material/Autocomplete";
-import TextField from "@mui/material/TextField";
 import React, { useEffect, useState } from "react";
 import { FaSearch as SearchIcon } from "react-icons/fa";
 import { FaRegTimesCircle as DeleteIcon } from "react-icons/fa";
@@ -72,25 +70,3 @@ const PoiSelector = ({ pois, onSelect }) => {
 };
 
 export default PoiSelector;
-
-/* <Autocomplete
-  id="poi-selector"
-  disablePortal
-  size="small"
-  options={
-    ourPois?.map((e) => {
-      return { id: e.id, label: e.name };
-    }) || []
-  }
-  onChange={(event, values) => {
-    onSelect(values.id);
-  }}
-  renderInput={(params) => (
-    <TextField
-      {...params}
-      variant="standard"
-      label="Search your amenity"
-    />
-  )}
-  //sx={{ width: "20%" }}
-/> */
