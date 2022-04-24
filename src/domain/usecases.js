@@ -23,7 +23,7 @@ export function getPoisFromFloorIdFilteringSome(
 }
 
 export function getFloorplanFromFloorId(building, floor_id) {
-  return building.getFloorById(floor_id).floorplan;
+  return building?.getFloorById(floor_id).floorplan;
 }
 
 export function getFloorplanFromFloorLevel(building, level) {

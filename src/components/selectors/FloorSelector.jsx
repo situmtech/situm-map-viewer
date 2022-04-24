@@ -1,30 +1,39 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
-export function floorOptionsFactory(floors) {
-  var floorOptions = [];
+const FloorSelector = ({
+  currentBuilding,
+  currentFloor,
+  buildings,
+  onSelect,
+}) => {
+  const [floors, setFloors] = useState([]);
 
-  floors.toArray().forEach((f) => {
-    floorOptions.push({ id: f.id, label: f.level });
-  });
+  useEffect(
+    function onBuildingAndActiveUpdate() {
+      if (buildings.length == 0) {
+        setFloors([]);
+      } else {
+        const calculatedFloors = buildings.find(
+          (b) => b.id == currentBuilding
+        )?.floors;
+        setFloors(calculatedFloors.floors);
+      }
+    },
+    [buildings, currentFloor]
+  );
 
-  return floorOptions;
-}
-
-const FloorSelector = ({ active = "", floors, onSelect }) => {
   return (
     <div className="floor-selector">
       <div className="floor-selector__content">
-        {floors?.map((floor) => (
+        {floors.map((floor) => (
           <div
             key={`floor-${floor.id}`}
             className={`floor-selector__floor ${
-              active == floor.id && "active"
+              currentFloor == floor.id && "active"
             }`}
-            onClick={() => {
-              onSelect(floor.id);
-            }}
+            onClick={() => onSelect(floor.id)}
           >
-            {floor.label}
+            {floor.level}
           </div>
         ))}
       </div>

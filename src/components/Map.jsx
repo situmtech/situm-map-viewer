@@ -16,11 +16,9 @@ export class PoisToShow {
   }
 
   toJson() {
-    var _poisJson = [];
-    this.pois.forEach((p) => {
-      _poisJson.push(p.toJson());
+    return this.pois?.map((p) => {
+      return p.toJson();
     });
-    return _poisJson;
   }
 }
 
@@ -65,65 +63,118 @@ const dirLight = new SunLight({
   _shadow: true,
 });
 
-const buildLayers = ({ bounds, image, poisToShow }) => {
+const buildLayers = ({
+  bounds,
+  image,
+  buildings,
+  currentBuilding,
+  currentFloor,
+  onPoiSelect,
+  selectedPoi,
+}) => {
   const floorplanLayer = new BitmapLayer({
     id: "floorplay-layer",
     bounds: bounds,
     image: image,
     pickable: true,
-    //onClick: (info) => console.log(info),
   });
+
+  let pois = [];
+
+  if (buildings.length > 0) {
+    const building = buildings.find((b) => b.id == currentBuilding);
+    pois = building.pois.pois.filter(
+      (el) => el.position.floor_id == currentFloor
+    );
+  }
 
   const poiLayer = new IconLayer({
     id: "icon-layer",
-    data: poisToShow,
+    data: pois,
     pickable: true,
     getIcon: (d) => ({
-      url: d.icon,
+      url: d.category.iconUrl,
       width: 128,
       height: 128,
       anchorY: 128,
       mask: false,
     }),
     sizeScale: 5,
-    getPosition: (d) => d.coordinates,
+    getPosition: (d) => [d.position.lng, d.position.lat],
     getSize: (_d) => 8,
-    /*onHover: (el) => console.log,
-    onClick: (el) => console.log,*/
+    // getColor: (_d) => [255, 0, 0, 255],
+    onHover: (el) => console.log,
+    onClick: (el) => {
+      console.log(el.object);
+      onPoiSelect(el.object.id);
+    },
+    visible: (el) => {
+      console.log(el);
+      return el.level == currentFloor;
+    },
   });
 
-  return [floorplanLayer, poiLayer];
+  const layers = [floorplanLayer, poiLayer];
+
+  return layers;
 };
 
-const Map = (props) => {
+const Map = ({
+  buildings,
+  currentBuilding,
+  currentFloor,
+  selectedPoi,
+  onPoiSelect,
+  img,
+  initialViewState,
+  bounds,
+}) => {
   const [effects] = useState(() => {
     const lightingEffect = new LightingEffect({ ambientLight, dirLight });
     lightingEffect.shadowColor = [0, 0, 0, 0.5];
     return [lightingEffect];
   });
   const [mapCursor, setMapCursor] = useState("default");
-  const [image, setImage] = useState(props.img);
-  const [initialViewState, setInitialViewState] = useState(
-    props.initialViewState
-  );
-  const [bounds, setBounds] = useState(props.bounds);
-  const [poisToShow, setPoisToShow] = useState(
-    props.poisToShow ? props.poisToShow.toJson() : new PoisToShow().toJson()
-  );
+
+  const [imageInternal, setImage] = useState(img);
+  const [initialViewStateInternal, setInitialViewState] =
+    useState(initialViewState);
+  const [boundsInternal, setBounds] = useState(bounds);
+  const [layers, setLayers] = useState([]);
+
+  // Start the map
+  // useEffect(() => {
+  //   setImage(buildings[0].floors.find(e => e.level == currentFloor))
+  // }, [buildings, currentBuilding]);
 
   useEffect(() => {
-    setImage(props.img);
-    setInitialViewState(props.initialViewState);
-    setBounds(props.bounds);
-    setPoisToShow(
-      props.poisToShow ? props.poisToShow.toJson() : new PoisToShow().toJson()
+    setImage(img);
+    setInitialViewState(initialViewState);
+    setBounds(bounds);
+    setLayers(
+      buildLayers({
+        bounds,
+        image: imageInternal,
+        buildings,
+        currentBuilding,
+        currentFloor,
+        onPoiSelect,
+        selectedPoi,
+      })
     );
-  }, [props]);
+  }, [
+    img,
+    imageInternal,
+    initialViewState,
+    bounds,
+    currentBuilding,
+    buildings,
+  ]);
 
   return (
     <DeckGL
-      initialViewState={initialViewState}
-      layers={[...buildLayers({ image, bounds, poisToShow })]}
+      initialViewState={initialViewStateInternal}
+      layers={layers}
       controller={{
         touchZoom: true,
         touchRotate: true,

@@ -1,30 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { FaSearch as SearchIcon } from "react-icons/fa";
-import { FaRegTimesCircle as DeleteIcon } from "react-icons/fa";
 
-import { Poi } from "../../domain/models";
-
-const PoiSelector = ({ pois, onSelect }) => {
-  //const [poisFiltered, setPoisFiltered] = useState < Array < Poi >> [];
-  const [poisFiltered, setPoisFiltered] = useState([]);
+const PoiSelector = ({ pois, onSelect, currentPoiID }) => {
   const [filterText, setFilterText] = useState("");
 
-  const filterPois = () => {
-    if (filterText.trim() === "") {
-      setPoisFiltered(pois);
-    } else {
-      const newPois = pois.filter((poi) => {
-        return poi.name.toLowerCase().includes(filterText.toLowerCase());
-      });
-      setPoisFiltered(newPois);
-    }
-  };
-
-  useEffect(() => {
-    filterPois();
-  }, [pois, filterText]);
-
-  return (
+  return currentPoiID !== null ? (
+    <div className="poi-selector">
+      <div className="poi-selector__title">
+        {pois.find((poi) => poi.id == currentPoiID).name}
+      </div>
+      <div className="poi-selector__content">
+        {JSON.stringify(pois.find((poi) => poi.id == currentPoiID))}
+        <button onClick={() => onSelect(null)}>Close</button>
+      </div>
+    </div>
+  ) : (
     <div className="poi-selector">
       <div className="poi-selector__title">
         <img
@@ -48,19 +38,26 @@ const PoiSelector = ({ pois, onSelect }) => {
         </div>
       </div>
       <div className="poi-selector__content">
-        {poisFiltered?.length > 0 ? (
-          poisFiltered?.map((poi) => (
-            <div
-              key={`poi-${poi.id}`}
-              className="poi-selector__poi"
-              onClick={() => {
-                onSelect(poi.id);
-              }}
-            >
-              <div className="poi-selector__poi__icon"></div>
-              <div className="poi-selector__poi__name">{poi.name}</div>
-            </div>
-          ))
+        {pois?.length > 0 ? (
+          pois
+            ?.filter((poi) => {
+              return (
+                filterText.trim() === "" ||
+                poi.name.toLowerCase().includes(filterText.toLowerCase())
+              );
+            })
+            .map((poi) => (
+              <div
+                key={`poi-${poi.id}`}
+                className="poi-selector__poi"
+                onClick={() => {
+                  onSelect(poi.id);
+                }}
+              >
+                <div className="poi-selector__poi__icon"></div>
+                <div className="poi-selector__poi__name">{poi.name}</div>
+              </div>
+            ))
         ) : (
           <div className="poi-selector__no-pois">No pois found</div>
         )}

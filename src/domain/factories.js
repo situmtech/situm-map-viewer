@@ -46,10 +46,7 @@ function poiFactoryFromJson(pois, poiCategories) {
 }
 
 function floorFactoryFromJson(floorData) {
-  var _floors = [];
-  floorData.forEach((e) =>
-    _floors.push(new Floor(e.id, e.level, e.maps.mapUrl))
-  );
+  var _floors = floorData.map((e) => new Floor(e.id, e.level, e.maps.mapUrl));
 
   return new Floors(_floors);
 }

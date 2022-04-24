@@ -134,7 +134,7 @@ div {
   }
 
   &__floor {
-    padding: 1rem;
+    padding: .8rem .4rem;
     border: 1px solid #ddd;
     border-radius: 2px;
     text-decoration: none;
@@ -143,9 +143,10 @@ div {
     text-align:center;
     cursor: pointer;
 
-    /*:hover {
-      background: lightblue;
-    }*/
+    &:hover {
+      border-color: rgba(var(--situm-accent-color), 1);
+      background: rgba(var(--situm-accent-color), 0.8);
+    }
 
     .active {
       background: var(--situm-text-color-select);
