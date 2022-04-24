@@ -77,6 +77,14 @@ function App() {
         <div className="loading">Loading cartography…</div>
       ) : (
         <>
+          <div className="loading">
+            {buildings.find((b) => b.id == currentBuildingID).name} - Level{" "}
+            {
+              buildings
+                .find((b) => b.id == currentBuildingID)
+                .floors?.floors?.find((f: any) => f.id == currentFloorID).level
+            }
+          </div>
           <PoiSelector
             buildings={buildings}
             currentBuilding={currentBuildingID}
