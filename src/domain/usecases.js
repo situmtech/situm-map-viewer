@@ -30,10 +30,6 @@ export function getFloorplanFromFloorLevel(building, level) {
   return building.getFloorByLevel(level).floorplan;
 }
 
-export function getPoiById(building, poiId) {
-  return building.getPoiById(poiId);
-}
-
 export function getBuildingById(buildings, id) {
   return buildings.filter((b) => b.id == id);
 }
