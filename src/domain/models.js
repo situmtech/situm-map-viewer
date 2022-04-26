@@ -127,13 +127,22 @@ export class Pois {
   }
 }
 
+//const generator = new Math.seedrandom("11111");
 export class PoiCategory {
-  constructor(id, iconUrl, selectedIconUrl /*, color*/) {
+  constructor(id, iconUrl, selectedIconUrl) {
     this.id = id;
     this.iconUrl = iconUrl;
     this.selectedIconUrl = selectedIconUrl;
-    //this.color = color;
+    //this.color = this.getColor(id);
   }
+
+  /*getColor(id) {
+    const c1 = Math.floor(generator() * id);
+    const c2 = Math.floor(generator() * id);
+    const c3 = Math.floor(generator() * id);
+
+    return [c1, c2, c3];
+  }*/
 }
 
 export class PoiCategories {

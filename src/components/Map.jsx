@@ -77,13 +77,15 @@ const buildLayers = ({
           sizeScale: 5,
           getPosition: (d) => [d.position.lng, d.position.lat],
           getSize: (_d) => 8,
-          // getColor: (_d) =>
+          //getColor: (_d) => _d.category.color,
           //   _d.object.id == selectedPoi ? [0, 0, 0, 255] : [255, 0, 0, 255],
           onClick: (el) => {
             onPoiSelect(el.object);
           },
         })
       );
+
+    console.log(pois);
   }
 
   return layers;

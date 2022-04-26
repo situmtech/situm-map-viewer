@@ -158,6 +158,12 @@ div {
     flex-direction: column;
   }
 
+  /*&__content::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+    display: none;
+  }*/
+
   &__poi {
     display:flex;
     gap: .5em;
