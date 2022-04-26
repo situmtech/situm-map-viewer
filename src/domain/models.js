@@ -93,11 +93,13 @@ export class Position {
 }
 
 export class Poi {
-  constructor(id, name, position, category) {
+  constructor(id, name, position, category, categoryName, info) {
     this.id = id;
     this.name = name;
+    this.info = info;
     this.position = position;
     this.category = category;
+    this.categoryName = categoryName;
   }
 }
 

@@ -76,7 +76,9 @@ function poiFactoryFromJson(pois, poiCategories) {
         e.id,
         e.name,
         new Position(e.buildingId, e.floorId, e.location.lat, e.location.lng),
-        poiCategory
+        poiCategory,
+        e.categoryName,
+        e.info
       )
     );
   });
