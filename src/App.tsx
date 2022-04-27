@@ -25,6 +25,7 @@ function App() {
   });
   const [loading, setLoading] = useState<boolean>(true);
   const [buildings, setBuildings] = useState<any[]>([]);
+  //const [poiCategories, setPoiCategories] = useState<any[]>([]);
   const [currentBuildingID, setCurrentBuildingID] = useState<number | null>(
     BUILDINGID
   );
@@ -47,6 +48,7 @@ function App() {
         const building = buildingFactoryFromJson(b, c);
 
         setBuildings([building]);
+        //setPoiCategories(c);
         setCurrentBuildingID(BUILDINGID);
         setCurrentFloorID(building.getFloorByLevel(0).id);
       })
@@ -73,6 +75,7 @@ function App() {
         <Map
           initialViewState={initialViewState}
           buildings={buildings}
+          //poiCategories={poiCategories}
           currentBuilding={currentBuildingID}
           currentFloor={currentFloorID}
           selectedPoi={selectedPoiID}
@@ -94,6 +97,7 @@ function App() {
           </div>
           <PoiSelector
             buildings={buildings}
+            //poiCategories={poiCategories}
             currentBuilding={currentBuildingID}
             onSelect={onPoiSelect}
             currentPoiID={selectedPoiID}

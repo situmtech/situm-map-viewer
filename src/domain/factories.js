@@ -59,10 +59,11 @@ export function poiCategoryFactory(data) {
   var _poiCategories = [];
   data.forEach((e) =>
     _poiCategories.push(
-      new PoiCategory(e.id, e.iconUrl, e.selectedIconUrl, e.color)
+      new PoiCategory(e.id, e.nameEn /*, e.iconUrl , e.selectedIconUrl*/)
     )
   );
 
+  console.log(_poiCategories);
   return new PoiCategories(_poiCategories);
 }
 
@@ -77,7 +78,7 @@ function poiFactoryFromJson(pois, poiCategories) {
         e.name,
         new Position(e.buildingId, e.floorId, e.location.lat, e.location.lng),
         poiCategory,
-        e.categoryName,
+        e.categoryId,
         e.info
       )
     );

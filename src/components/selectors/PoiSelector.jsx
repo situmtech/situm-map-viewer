@@ -19,36 +19,68 @@ const PoiSelector = ({
     setCurrentPoi(pois.find((poi) => poi.id == currentPoiID));
   }, [buildings, currentPoiID]);
 
-  function filterPois(poisToFilter) {
-    const filtered = poisToFilter?.filter((poi) => {
+  function filterPois() {
+    // PRUEBA
+    const filtered = pois?.filter((poi) => {
       return (
         filterText.trim() === "" ||
         poi.name.toLowerCase().includes(filterText.toLowerCase())
       );
     });
 
-    setFilteredPois(filtered);
+    //setFilteredPois(filtered);
+    if (filteredPois.length > 0) {
+      return filtered.map((poi) => (
+        <div
+          key={`poi-${poi.id}`}
+          className="poi-selector__poi"
+          onClick={() => {
+            onSelect(poi);
+            setCurrentPoi(pois.find((p) => p.id == poi.id));
+          }}
+        >
+          <img
+            className="poi-selector__poi__icon"
+            src={poi?.category.iconUrl}
+          />
+          <div className="poi-selector__poi__name">{poi.name}</div>
+        </div>
+      ));
+    } else {
+      return (
+        <div className="poi-selector__no-pois">
+          No pois found matching the filter
+        </div>
+      );
+    }
   }
 
   return currentPoiID != null && currentPoi != null ? (
     <div className="poi-selector">
       <div className="poi-selector__title">
-        <div className="poi-selector__title__poi">
+        <div className="poi-selector__header">
           <img
-            className="poi-selector__title__poi__icon"
-            src={currentPoi?.category.iconUrl}
+            className="poi-selector__header__image"
+            src="https://situm.com/wp-content/themes/situm/img/logo-situm.svg"
+            alt="Situm"
           />
-          <div className="poi-selector__title__poi__name">
-            {currentPoi?.name}
+          <div className="poi-selector__title__poi">
+            <img
+              className="poi-selector__title__poi__icon"
+              src={currentPoi?.category.iconUrl}
+            />
+            <div className="poi-selector__title__poi__name">
+              {currentPoi?.name}
+            </div>
           </div>
         </div>
+
         <BackIcon
           className="poi-selector__title back-icon"
           onClick={() => onSelect(null)}
         />
       </div>
       <div className="poi-selector__info">
-        {/*JSON.stringify(pois.find((poi) => poi.id == currentPoiID))*/}
         <div className="poi-selector__info__description">
           {"que tienda tan bonita"}
         </div>
@@ -116,77 +148,17 @@ const PoiSelector = ({
         ) : (
           <div className="poi-selector__no-pois">No pois found</div>
         )}
+        {
+          // PRUEBA
+          /*pois?.length > 0 ? (
+          filterPois()
+        ) : (
+          <div className="poi-selector__no-pois">No pois found</div>
+        )*/
+        }
       </div>
     </div>
   );
 };
 
 export default PoiSelector;
-
-/*
-{pois?.length > 0 ? (
-  pois
-    ?.filter((poi) => {
-      return (
-        filterText.trim() === "" ||
-        poi.name.toLowerCase().includes(filterText.toLowerCase())
-      );
-    })
-    .map((poi) => (
-      <div
-        key={`poi-${poi.id}`}
-        className="poi-selector__poi"
-        onClick={() => {
-          onSelect(poi);
-        }}
-      >
-        <div className="poi-selector__poi__icon"></div>
-        <div className="poi-selector__poi__name">{poi.name}</div>
-      </div>
-    ))
-) : (
-  <div className="poi-selector__no-pois">No pois found</div>
-)}
-*/
-
-/*
-{pois?.length > 0 ? (
-          filterPois() && filteredPois?.length > 0 ? (
-            filteredPois.map((poi) => (
-              <div
-                key={`poi-${poi.id}`}
-                className="poi-selector__poi"
-                onClick={() => {
-                  onSelect(poi);
-                }}
-              >
-                <div className="poi-selector__poi__icon"></div>
-                <div className="poi-selector__poi__name">{poi.name}</div>
-              </div>
-            ))
-          ) : (
-            <div className="poi-selector__no-pois">
-              No pois found matching the slected name
-            </div>
-          )
-        ) : (
-          <div className="poi-selector__no-pois">
-            No pois found in the building
-          </div>
-        )}
-*/
-
-/*<div className="poi-selector__title">
-        <div className="poi-selector__title__poi__icon"></div>
-        <div className="poi-selector__title__poi__info">
-          <h3>{currentPoi?.name}</h3>
-          <h4>
-            {buildings[0].name} - Level {""}
-            {
-              buildings[0].floors?.floors?.find(
-                (f) => f.id == currentPoi?.position.floor_id
-              ).level
-            }
-          </h4>
-        </div>
-      </div>*/
