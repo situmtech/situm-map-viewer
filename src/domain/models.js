@@ -16,7 +16,7 @@ const poiCategoryProperties = new Map([
     2,
     {
       url: "https://cdn-icons-png.flaticon.com/512/948/948747.png",
-      color: [140, 25, 25],
+      color: [0, 0, 0],
     },
   ],
   [
@@ -24,7 +24,7 @@ const poiCategoryProperties = new Map([
     3,
     {
       url: "https://cdn-icons.flaticon.com/png/512/2311/premium/2311139.png?token=exp=1651055231~hmac=7eb6313f4184e2253fcdcfb337ba498b",
-      color: [140, 25, 25],
+      color: [0, 0, 0],
     },
   ],
   [
@@ -48,7 +48,7 @@ const poiCategoryProperties = new Map([
     6,
     {
       url: "https://cdn-icons-png.flaticon.com/512/1512/1512713.png",
-      color: [140, 25, 25],
+      color: [0, 0, 0],
     },
   ],
   [
@@ -56,7 +56,7 @@ const poiCategoryProperties = new Map([
     7,
     {
       url: "https://cdn-icons-png.flaticon.com/512/102/102665.png",
-      color: [140, 25, 25],
+      color: [1, 191, 231],
     },
   ],
   [
@@ -64,7 +64,7 @@ const poiCategoryProperties = new Map([
     8,
     {
       url: "https://cdn-icons.flaticon.com/png/512/2641/premium/2641951.png?token=exp=1651055399~hmac=e398a91faa89ae598de600ef36d00706",
-      color: [140, 25, 25],
+      color: [0, 0, 0],
     },
   ],
   [
@@ -72,7 +72,7 @@ const poiCategoryProperties = new Map([
     9,
     {
       url: "https://cdn-icons-png.flaticon.com/512/185/185547.png",
-      color: [140, 25, 25],
+      color: [74, 165, 100],
     },
   ],
   [
