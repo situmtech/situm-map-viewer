@@ -29,52 +29,48 @@ div {
 
 .poi-selector {
   background-color: White;
-  z-index: 2;
-  width: 20%;
+  border-radius: 2px;
+  border: 0 none !important;
+  box-shadow: 0 0 0 1px rgba(63, 63, 68, 0.05), 0 1px 3px 0 rgba(63, 63, 68, 0.15);
   display: flex;
   flex-direction: column;
-  position: absolute;
-  max-width: 300px;
-  background-color: white;
-  border: 0 none !important;
-  border-radius: 2px;
-  box-shadow: 0 0 0 1px rgba(63, 63, 68, 0.05),
-    0 1px 3px 0 rgba(63, 63, 68, 0.15);
-  top: 1rem;
   left: 1rem;
+  min-width: 250px;
+  max-width: 300px;
+  position: absolute;
+  top: 1rem;
+  width: 20%;
+  z-index: 2;
 
+  /* width */
   ::-webkit-scrollbar {
-    width: 6px;
+    width: 5px;
+  }
+
+  /* Track */
+  ::-webkit-scrollbar-track {
+    border-radius: 5px;
+  }
+
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: var(--situm-background-color);
+    border-radius: 10px;
   }
 
   &__title {
     background-color: var(--situm-selector-title-background);
-    padding: 1rem;
+    padding-right: 10px;
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
 
-    &__poi {
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-
-      &__icon {
-        width: 30px;
-        height:30px;
-        //background: rgb(var(--situm-accent-color));
-        border-radius: var(--situm-radius);
-      }
-
-      &__name {
-        padding-left: 1rem;
-      }
-    }
-
     .back-icon {
       padding: 0;
       cursor: pointer;
+      fill: black;
+      width:20px;
     }
   }
 
@@ -111,15 +107,6 @@ div {
     background-color: var(--situm-selector-title-background);
     padding: 1rem;
 
-    &__poi {
-      &__icon {
-        width: 30px;
-        height:30px;
-        //background: rgb(var(--situm-accent-color));
-        border-radius: var(--situm-radius);
-      }
-    }
-
     &__image {
       max-height: 50px;
       display:inline-block;
@@ -150,23 +137,24 @@ div {
     margin: .5rem;
     padding-top: 1rem;
     padding-bottom: 1em;
-    gap: 1em;
+    gap: .8em;
     max-height: 41vh;
     overflow-y: scroll;
     display:flex;
     justify-content: flex-start;
     flex-direction: column;
+    font-size:.95rem;
+
+    img{
+      max-width: 100%;
+    }
   }
 
-  /*&__content::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-    display: none;
-  }*/
-
   &__poi {
+    flex-direction: row;
+    align-items: center;
     display:flex;
-    gap: .5em;
+    gap: 1em;
     padding-left: .7em;
     justify-content: flex-start;
     align-items: center;
@@ -177,10 +165,15 @@ div {
     }
 
     &__icon {
-      width: 30px;
-      height:30px;
-      //background: rgb(var(--situm-accent-color));
       border-radius: var(--situm-radius);
+      background: rgb(var(--situm-accent-color));
+      padding: 4px;
+
+      &__image {
+        width: 15px;
+        height: 15px;
+        filter: brightness(0) invert(1);
+      }
     }
   }
 
@@ -192,9 +185,9 @@ div {
 
 .floor-selector {
   position: absolute;
-  top: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
   right: 1rem;
-  width:50px;
 
   &__content {
     display: flex;
@@ -203,15 +196,12 @@ div {
     align-items: stretch;
     text-align: center;
     gap: 1rem;
-    height: 90vh;
-    padding-top: 1rem;
-    padding-bottom: 1em;
   }
 
   &__floor {
-    padding: .8rem .4rem;
+    padding: .5rem .6rem;
     border: 1px solid #ddd;
-    border-radius: 2px;
+    border-radius: var(--situm-radius);
     text-decoration: none;
     background:white;
     color: black;
@@ -220,17 +210,18 @@ div {
 
     &:hover {
       border-color: rgba(var(--situm-accent-color), 1);
-      background: rgba(var(--situm-accent-color), 0.8);
+      background: rgba(var(--situm-accent-color), 1);
+      color: White
     }
+
+    &.active {
+      background: rgba(var(--situm-accent-color), 1);
+      color: white;
+      border-color: transparent;
+    }
+
   }
 
-  .active {
-    background: rgba(var(--situm-accent-color), 0.8);//var(--situm-text-color-select);
-  }
-}
-
-.MuiAutocomplete-popper {
-  display:block;
 }
 
 .map-toolbar {
@@ -241,15 +232,25 @@ div {
   flex-direction: column;
   gap:1rem;
   margin-right: .7rem;
+  justify-content: end;
 
   &__button {
     display: flex;
     align-items: center;
     background: rgb(var(--situm-accent-color));
-    padding: 3px;
     border-radius: 3px;
     color: var(--situm-accent-background);
-    cursor: pointer;
+    padding: 0;
+
+    &__icon {
+      padding: 10px;
+      cursor: pointer;
+    }
+
+    &--compound{
+      flex-direction: column;
+      gap:10px;
+    }
   }
 }
 
