@@ -23,15 +23,15 @@ const poiCategoryProperties = new Map([
     // Entrance
     3,
     {
-      url: "https://cdn-icons.flaticon.com/png/512/2311/premium/2311139.png?token=exp=1651055231~hmac=7eb6313f4184e2253fcdcfb337ba498b",
-      color: [0, 0, 0],
+      url: "https://cdn-icons-png.flaticon.com/512/298/747335.png",
+      color: [128, 0, 128],
     },
   ],
   [
     // Information
     4,
     {
-      url: "https://cdn-icons.flaticon.com/png/512/665/premium/665049.png?token=exp=1651055272~hmac=399e87bc3916538219875b34e76ac7ae",
+      url: "https://cdn-icons.flaticon.com/png/512/665/premium/665049.png",
       color: [140, 25, 25],
     },
   ],
@@ -39,7 +39,7 @@ const poiCategoryProperties = new Map([
     // Parking
     5,
     {
-      url: "https://cdn-icons.flaticon.com/png/512/2893/premium/2893995.png?token=exp=1651055315~hmac=e9542fe6616504af0a28d4c66ab9b2bd",
+      url: "https://cdn-icons.flaticon.com/png/512/2893/2893995.png",
       color: [140, 25, 25],
     },
   ],
@@ -63,7 +63,7 @@ const poiCategoryProperties = new Map([
     // Stairs
     8,
     {
-      url: "https://cdn-icons.flaticon.com/png/512/2641/premium/2641951.png?token=exp=1651055399~hmac=e398a91faa89ae598de600ef36d00706",
+      url: "https://cdn-icons.flaticon.com/png/512/2641/2641951.png",
       color: [0, 0, 0],
     },
   ],
@@ -79,7 +79,7 @@ const poiCategoryProperties = new Map([
     // No category
     "default",
     {
-      url: "https://cdn-icons.flaticon.com/png/512/3106/premium/3106703.png?token=exp=1651050352~hmac=5b86b4c6ee4a18508193c6d335179b6f",
+      url: "https://cdn-icons.flaticon.com/png/512/3106/3106703.png",
       color: [47, 43, 43],
     },
   ],
