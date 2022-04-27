@@ -3,20 +3,13 @@ import {
   LightingEffect,
   _SunLight as SunLight,
 } from "@deck.gl/core";
-import {
-  BitmapLayer,
-  CompositeLayer,
-  DeckGL,
-  FlyToInterpolator,
-  IconLayer,
-} from "deck.gl";
+import { DeckGL, FlyToInterpolator } from "deck.gl";
 import React, { useEffect, useState } from "react";
 import { Map as StaticMap } from "react-map-gl";
 
-import { POI_CATEGORY_ICON_BACKGROUND } from "../domain/models";
-import { getBaseFloorplan, getFloorplanFromFloorId } from "../domain/usecases";
-
 import MapToolbar from "./MapToolbar";
+import FloorPlanLayer from "./layers/FloorplanLayer";
+import PoiLayer from "./layers/PoiLayer";
 
 const MAPBOX_API_KEY = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN;
 
@@ -34,7 +27,6 @@ const dirLight = new SunLight({
 
 const buildLayers = ({
   buildings,
-  poiCategories,
   currentBuilding,
   currentFloor,
   onPoiSelect,
@@ -43,77 +35,29 @@ const buildLayers = ({
   const layers = [];
   const building = buildings.find((b) => b.id == currentBuilding);
 
-  if (building) {
-    const image = currentFloor
-      ? getFloorplanFromFloorId(building, currentFloor)
-      : getBaseFloorplan(building);
-
-    const bounds = [
-      [building.geometry.corners.se.lng, building.geometry.corners.se.lat],
-      [building.geometry.corners.ne.lng, building.geometry.corners.ne.lat],
-      [building.geometry.corners.nw.lng, building.geometry.corners.nw.lat],
-      [building.geometry.corners.sw.lng, building.geometry.corners.sw.lat],
-    ];
-
-    if (image) {
-      layers.push(
-        new BitmapLayer({
-          id: "floorplay-layer",
-          bounds: bounds,
-          image: image,
-          pickable: true,
-        })
-      );
-    }
-
-    const pois = building.pois.pois.filter(
-      (el) => el.position.floor_id == currentFloor
-    );
-
-    pois.length > 0 &&
-      layers.push(
-        new CompositeLayer([
-          new IconLayer({
-            id: (d) => `${d.id}-icon-layer-background`,
-            data: pois,
-            pickable: true,
-            getIcon: (d) => ({
-              url: POI_CATEGORY_ICON_BACKGROUND,
-              width: 128,
-              height: 128,
-              anchorY: 128,
-              mask: true,
-            }),
-            sizeScale: 5,
-            getPosition: (d) => [d.position.lng, d.position.lat],
-            getSize: (d) => 7,
-            getColor: (d) => d.category.color, //getCategorieById(poiCategories, d.categoryId).color,
-            onClick: (d) => {
-              onPoiSelect(d.object);
-            },
-          }),
-          new IconLayer({
-            id: (d) => `${d.id}-icon-layer-icon`,
-            data: pois,
-            pickable: true,
-            getIcon: (d) => ({
-              url: d.category.iconUrl, //getCategorieById(poiCategories, d.categoryId).iconUrl, //d.category.iconUrl,
-              width: 128,
-              height: 128,
-              anchorY: 128,
-              mask: true,
-            }),
-            sizeScale: 5,
-            getPosition: (d) => [d.position.lng, d.position.lat],
-            getSize: (d) => 6,
-            getColor: (d) => [255, 255, 255],
-            onClick: (d) => {
-              onPoiSelect(d.object);
-            },
-          }),
-        ])
-      );
+  // If no building the nothing to render
+  if (!building) {
+    return [];
   }
+
+  layers.push(new FloorPlanLayer({ building, currentFloor }));
+
+  const pois = building.pois.pois.filter(
+    (el) => el.position.floor_id == currentFloor
+  );
+
+  pois.length > 0 &&
+    layers.push(
+      new PoiLayer({
+        pois,
+        selectedPoi,
+        onPoiSelect,
+        visible: true,
+        onClick: (d) => {
+          onPoiSelect(d.object);
+        },
+      })
+    );
 
   return layers;
 };
@@ -137,7 +81,7 @@ const Map = ({
     latitude: 37.7045,
     zoom: 13,
     pitch: 0,
-    bearing: 0,
+    bearing: 20,
   });
   const [layers, setLayers] = useState([]);
 
@@ -147,6 +91,7 @@ const Map = ({
     if (!building) return;
 
     setInitialViewState({
+      ...initialViewState,
       longitude: building.geometry.location.lng,
       latitude: building.geometry.location.lat,
       zoom: 18,
@@ -180,7 +125,6 @@ const Map = ({
   }, [selectedPoi]);
 
   useEffect(() => {
-    setInitialViewState(initialViewState);
     setLayers(
       buildLayers({
         buildings,
@@ -190,7 +134,7 @@ const Map = ({
         selectedPoi,
       })
     );
-  }, [currentBuilding, buildings, initialViewState]);
+  }, [currentBuilding, buildings]);
 
   return (
     <DeckGL
@@ -222,22 +166,30 @@ const Map = ({
 
       <MapToolbar
         onIncreaseZoom={() => {
-          console.log();
+          console.log("zoom in");
           setInitialViewState({
             ...initialViewState,
             zoom: initialViewState.zoom + 1,
           });
         }}
         onDecreaseZoom={() => {
+          console.log("zoom out");
           setInitialViewState({
             ...initialViewState,
             zoom: initialViewState.zoom - 1,
           });
         }}
         onCenter={() => {
-          alert("test");
-          // setCurrentBuildingID(null);
-          // setCurrentBuildingID(currentBuildingID);
+          const building = buildings.find((b) => b.id == currentBuilding);
+
+          setInitialViewState({
+            ...initialViewState,
+            longitude: building.geometry.location.lng,
+            latitude: building.geometry.location.lat,
+            zoom: 18,
+            transitionDuration: 200,
+            transitionInterpolator: new FlyToInterpolator(),
+          });
         }}
       />
     </DeckGL>
