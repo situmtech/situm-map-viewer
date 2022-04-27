@@ -3,13 +3,22 @@ import {
   LightingEffect,
   _SunLight as SunLight,
 } from "@deck.gl/core";
-import { BitmapLayer, IconLayer } from "@deck.gl/layers";
-import DeckGL from "@deck.gl/react";
-import { FlyToInterpolator } from "deck.gl";
+import {
+  BitmapLayer,
+  CompositeLayer,
+  DeckGL,
+  FlyToInterpolator,
+  IconLayer,
+} from "deck.gl";
 import React, { useEffect, useState } from "react";
 import { Map as StaticMap } from "react-map-gl";
 
-import { getBaseFloorplan, getFloorplanFromFloorId } from "../domain/usecases";
+import { POI_CATEGORY_ICON_BACKGROUND } from "../domain/models";
+import {
+  getBaseFloorplan,
+  getFloorplanFromFloorId,
+  /*getCategorieById,*/
+} from "../domain/usecases";
 
 const MAPBOX_API_KEY = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN;
 const ambientLight = new AmbientLight({
@@ -26,6 +35,7 @@ const dirLight = new SunLight({
 
 const buildLayers = ({
   buildings,
+  poiCategories,
   currentBuilding,
   currentFloor,
   onPoiSelect,
@@ -63,26 +73,46 @@ const buildLayers = ({
 
     pois.length > 0 &&
       layers.push(
-        new IconLayer({
-          id: "icon-layer",
-          data: pois,
-          pickable: true,
-          getIcon: (d) => ({
-            url: d.category.iconUrl,
-            width: 128,
-            height: 128,
-            anchorY: 128,
-            mask: false,
+        new CompositeLayer([
+          new IconLayer({
+            id: (d) => `${d.id}-icon-layer-background`,
+            data: pois,
+            pickable: true,
+            getIcon: (d) => ({
+              url: POI_CATEGORY_ICON_BACKGROUND,
+              width: 128,
+              height: 128,
+              anchorY: 128,
+              mask: true,
+            }),
+            sizeScale: 5,
+            getPosition: (d) => [d.position.lng, d.position.lat],
+            getSize: (d) => 7,
+            getColor: (d) => d.category.color, //getCategorieById(poiCategories, d.categoryId).color,
+            onClick: (d) => {
+              onPoiSelect(d.object);
+            },
           }),
-          sizeScale: 5,
-          getPosition: (d) => [d.position.lng, d.position.lat],
-          getSize: (_d) => 8,
-          //getColor: (_d) => _d.category.color,
-          //   _d.object.id == selectedPoi ? [0, 0, 0, 255] : [255, 0, 0, 255],
-          onClick: (el) => {
-            onPoiSelect(el.object);
-          },
-        })
+          new IconLayer({
+            id: (d) => `${d.id}-icon-layer-icon`,
+            data: pois,
+            pickable: true,
+            getIcon: (d) => ({
+              url: d.category.iconUrl, //getCategorieById(poiCategories, d.categoryId).iconUrl, //d.category.iconUrl,
+              width: 128,
+              height: 128,
+              anchorY: 128,
+              mask: true,
+            }),
+            sizeScale: 5,
+            getPosition: (d) => [d.position.lng, d.position.lat],
+            getSize: (d) => 6,
+            getColor: (d) => [255, 255, 255],
+            onClick: (d) => {
+              onPoiSelect(d.object);
+            },
+          }),
+        ])
       );
 
     console.log(pois);
