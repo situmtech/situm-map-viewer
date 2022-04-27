@@ -64,7 +64,7 @@ function App() {
 
   return (
     <ErrorBoundary fallbackRender={ErrorFallback}>
-      {currentBuildingID && (
+      {!loading && currentBuildingID && (
         <Map
           buildings={buildings}
           //poiCategories={poiCategories}
@@ -76,10 +76,15 @@ function App() {
       )}
 
       {loading ? (
-        <div className="loading">Loading cartography…</div>
-      ) : (
         <>
           <div className="loading">
+            <div className="loader"></div>
+            Loading cartography…
+          </div>
+        </>
+      ) : (
+        <>
+          <div className="location">
             {buildings.find((b) => b.id == currentBuildingID).name} - Level{" "}
             {
               buildings

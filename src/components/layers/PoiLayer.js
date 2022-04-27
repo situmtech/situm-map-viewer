@@ -18,7 +18,7 @@ export default class PoiLayer extends CompositeLayer {
         }),
         sizeScale: 4,
         getPosition: (d) => [d.position.lng, d.position.lat],
-        getSize: (d) => 7,
+        getSize: 7,
         getColor: (d) => d.category.color,
       }),
       new IconLayer({
@@ -34,8 +34,8 @@ export default class PoiLayer extends CompositeLayer {
         }),
         sizeScale: 3,
         getPosition: (d) => [d.position.lng, d.position.lat],
-        getSize: (d) => 6,
-        getColor: (d) => [255, 255, 255],
+        getSize: 6,
+        getColor: [255, 255, 255],
       }),
     ];
   }

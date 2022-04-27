@@ -6,7 +6,12 @@ import { FaMapPin as PositionIcon } from "react-icons/fa";
 const PoiListElement = ({ poi, onClick }) => {
   return (
     <div key={`poi-${poi.id}`} className="poi-selector__poi" onClick={onClick}>
-      <div className="poi-selector__poi__icon">
+      <div
+        className="poi-selector__poi__icon"
+        style={{
+          background: `rgb(${poi.category.color[0]}, ${poi.category.color[1]}, ${poi.category.color[2]})`,
+        }}
+      >
         <img
           className="poi-selector__poi__icon__image"
           src={poi?.category.iconUrl}
@@ -50,7 +55,12 @@ const PoiDetails = ({ poi, buildings, onSelect }) => {
       </div>
       <div className="poi-selector__info">
         <div className="poi-selector__poi">
-          <div className="poi-selector__poi__icon">
+          <div
+            className="poi-selector__poi__icon"
+            style={{
+              background: `rgb(${poi.category.color[0]}, ${poi.category.color[1]}, ${poi.category.color[2]})`,
+            }}
+          >
             <img
               className="poi-selector__poi__icon__image"
               src={poi?.category.iconUrl}
@@ -75,6 +85,8 @@ const PoiDetails = ({ poi, buildings, onSelect }) => {
             __html: poi?.info || "No additional information about this POI",
           }}
         ></div>
+
+        {/* <div>{JSON.stringify(poi)}</div> */}
       </div>
     </div>
   );
