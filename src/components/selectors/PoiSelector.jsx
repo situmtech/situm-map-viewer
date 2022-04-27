@@ -3,7 +3,7 @@ import { FaSearch as SearchIcon } from "react-icons/fa";
 import { FaChevronCircleLeft as BackIcon } from "react-icons/fa";
 import { FaMapPin as PositionIcon } from "react-icons/fa";
 
-const PoiListElement = ({ poi, onClick }) => {
+const PoiListElement = ({ poi, buildings, onClick }) => {
   return (
     <div key={`poi-${poi.id}`} className="poi-selector__poi" onClick={onClick}>
       <div
@@ -17,13 +17,22 @@ const PoiListElement = ({ poi, onClick }) => {
           src={poi?.category.iconUrl}
         />
       </div>
-      <div className="poi-selector__poi__name">{poi.name}</div>
-      <div className="poi-selector__poi__type">{poi.category.title}</div>
+      <div>
+        <div className="poi-selector__poi__name">{poi.name}</div>
+        <div className="poi-selector__info__position__text">
+          {buildings[0].name} - Level {""}
+          {
+            buildings[0].floors?.floors?.find(
+              (f) => f.id == poi?.position.floor_id
+            ).level
+          }
+        </div>
+      </div>
     </div>
   );
 };
 
-const PoiList = ({ pois, filterText, onClick }) => {
+const PoiList = ({ pois, filterText, buildings, onClick }) => {
   return pois
     ?.filter((poi) => {
       return (
@@ -32,7 +41,12 @@ const PoiList = ({ pois, filterText, onClick }) => {
       );
     })
     .map((poi) => (
-      <PoiListElement key={poi.id} poi={poi} onClick={() => onClick(poi)} />
+      <PoiListElement
+        key={poi.id}
+        poi={poi}
+        buildings={buildings}
+        onClick={() => onClick(poi)}
+      />
     ));
 };
 
@@ -136,6 +150,7 @@ const PoiSelector = ({
           <PoiList
             pois={pois}
             filterText={filterText}
+            buildings={buildings}
             onClick={(poi) => {
               onSelect(poi);
               setCurrentPoi(pois.find((p) => p.id == poi.id));

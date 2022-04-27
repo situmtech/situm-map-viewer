@@ -17,7 +17,6 @@ function MapToolbar({
           width="24px"
           height="24px"
           viewBox="0 0 32 32"
-          className="injected-svg"
           style={{
             flexShrink: 0,
             backfaceVisibility: "hidden",
