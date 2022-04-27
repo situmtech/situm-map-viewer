@@ -27,11 +27,10 @@ export class SitumAPI {
 
   async getPoiCategories() {
     const poiCategories = await this.situmSDK.cartography.getPoiCategories();
-    console.log(poiCategories);
 
     return poiCategories.map((c) => ({
-      ...c/*,
-      iconUrl: this.domain + c.iconUrl,*/
+      ...c /*,
+      iconUrl: this.domain + c.iconUrl,*/,
     }));
   }
 }

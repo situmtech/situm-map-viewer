@@ -63,7 +63,6 @@ export function poiCategoryFactory(data) {
     )
   );
 
-  console.log(_poiCategories);
   return new PoiCategories(_poiCategories);
 }
 

@@ -1,6 +1,7 @@
 // Domain Models
 export const POI_CATEGORY_ICON_BACKGROUND =
   "https://cdn-icons-png.flaticon.com/512/25/25394.png";
+
 const poiCategoryProperties = new Map([
   [
     // Coffee

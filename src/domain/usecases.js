@@ -41,9 +41,3 @@ export function getPoisFromBuildingId(buildings, buildingId) {
 export function getFloorsFromBuildingId(buildings, buildingId) {
   return getBuildingById(buildings, buildingId).floors;
 }
-
-/*export function getCategorieById(poiCategories, id) {
-  const cat = poiCategories.find((e) => e.id == id);
-  console.log(cat);
-  return cat;
-}*/
