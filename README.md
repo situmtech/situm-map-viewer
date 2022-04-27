@@ -15,9 +15,12 @@ A Map Viewer using the [SITUM](https://www.situm.com/) SDK JS to show your build
 
 </div>
 
-# What's in here
+## What's in here
 
-This project creates a web map viewer implementing some :
+This project creates a web map viewer as shown in the image below:
+![](./docs/assets/map-viewer-preview.png)
+
+It has some interesing features as a base point to develop you own custom map:
 
 - Retrieves information such as buildings, floors, POIs and POI categories.
 - Display the floorplan of the venue appropriately rotated.
@@ -25,7 +28,7 @@ This project creates a web map viewer implementing some :
 - Implement a basic Floor selector, that changes the floor to be displayed.
 - Implement a basic POI selector, that centers the view on the selected POI (changing floors if required).
 
-# Getting started
+## Getting started
 
 Below you can find the instructions to setup this project and run it locally
 
@@ -40,9 +43,27 @@ VITE_APIKEY='your-situm-apikey'
 
 you can **optionally** change the `VITE_MAPBOX_API_KEY` to display an underlying map in the viewer
 
-Then, execute "npm install" and "npm start". You should see a new webpage appearing in your browser (localhost:3000)
+Then, execute
 
-# A word of caution
+```
+npm install
+npm start
+```
 
-- This project is half-backed, may contain issues /bugs
-- If you use other map provider (instead of Deck.gl) you might need to change floorplan transformations (e.g. rotations, etc.)
+You should see a new webpage appearing in your browser (http://localhost:3000).
+
+## Versioning
+
+We use [SemVer](http://semver.org/) for versioning.
+
+Please refer to [CHANGELOG.md](CHANGELOG.md) for a list of notables changes for each version of the library.
+
+You can also see the [tags on this repository](https://github.com/situmtech/situm-sdk-js/tags).
+
+## Submitting Contributions
+
+You will need to sign a Contributor License Agreement (CLA) before making a submission. [Learn more here.](https://situm.com/contributions/)
+
+## License
+
+This project is licensed under the MIT - see the [LICENSE.txt](LICENSE.txt) file for details.
