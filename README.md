@@ -28,7 +28,7 @@ It has some interesing features as a base point to develop you own custom map:
 - Implement a basic Floor selector, that changes the floor to be displayed.
 - Implement a basic POI selector, that centers the view on the selected POI (changing floors if required).
 
-## Getting started
+## How to run this app
 
 Below you can find the instructions to setup this project and run it locally
 
@@ -67,3 +67,11 @@ You will need to sign a Contributor License Agreement (CLA) before making a subm
 ## License
 
 This project is licensed under the MIT - see the [LICENSE.txt](LICENSE.txt) file for details.
+
+## More information
+
+More info is available at our [Developers Page](https://situm.com/docs/01-introduction/).
+
+## Support information
+
+For any question or bug report, please send an email to [support@situm.es](mailto:support@situm.es)
