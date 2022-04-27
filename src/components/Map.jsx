@@ -1,10 +1,11 @@
 import {
   AmbientLight,
   LightingEffect,
+  LinearInterpolator,
   _SunLight as SunLight,
 } from "@deck.gl/core";
 import { DeckGL, FlyToInterpolator } from "deck.gl";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Map as StaticMap } from "react-map-gl";
 
 import MapToolbar from "./MapToolbar";
@@ -80,8 +81,10 @@ const Map = ({
     longitude: -122.519,
     latitude: 37.7045,
     zoom: 13,
-    pitch: 0,
-    bearing: 20,
+    pitch: 40,
+    bearing: 0,
+    transitionDuration: 200,
+    transitionInterpolator: new FlyToInterpolator({ curve: 2 }),
   });
   const [layers, setLayers] = useState([]);
 
@@ -95,8 +98,6 @@ const Map = ({
       longitude: building.geometry.location.lng,
       latitude: building.geometry.location.lat,
       zoom: 18,
-      transitionDuration: 200,
-      transitionInterpolator: new FlyToInterpolator(),
     });
     setLayers(
       buildLayers({
@@ -119,10 +120,19 @@ const Map = ({
       longitude: poi.position.lng,
       latitude: poi.position.lat,
       zoom: 19,
-      transitionDuration: 300,
-      transitionInterpolator: new FlyToInterpolator({ curve: 3, speed: 1 }),
     });
   }, [selectedPoi]);
+
+  const rotateCamera = useCallback(() => {
+    return;
+    setInitialViewState((viewState) => ({
+      ...viewState,
+      bearing: viewState.bearing + 5,
+      transitionDuration: 1000,
+      transitionInterpolator: new LinearInterpolator(["bearing"]),
+      onTransitionEnd: rotateCamera,
+    }));
+  }, []);
 
   useEffect(() => {
     setLayers(
@@ -155,6 +165,7 @@ const Map = ({
       }}
       effects={effects}
       getTooltip={({ object }) => object && `${object.name}`}
+      onLoad={rotateCamera}
     >
       <StaticMap
         mapboxAccessToken={MAPBOX_API_KEY}
@@ -165,6 +176,13 @@ const Map = ({
       />
 
       <MapToolbar
+        onResetBearing={() => {
+          setInitialViewState({
+            ...initialViewState,
+            bearing: 0,
+            pitch: 0,
+          });
+        }}
         onIncreaseZoom={() => {
           console.log("zoom in");
           setInitialViewState({
