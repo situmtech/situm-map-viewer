@@ -16,6 +16,13 @@ const APIKEY: string = import.meta.env.VITE_APIKEY;
 const BUILDINGID: number = import.meta.env.VITE_BUILDINGID;
 
 function App() {
+  const [initialViewState, setInitialViewState] = useState({
+    longitude: 0,
+    latitude: 0,
+    zoom: 13,
+    pitch: 0,
+    bearing: 20,
+  });
   const [loading, setLoading] = useState<boolean>(true);
   const [buildings, setBuildings] = useState<any[]>([]);
   const [currentBuildingID, setCurrentBuildingID] = useState<number | null>(
@@ -64,7 +71,7 @@ function App() {
     <ErrorBoundary fallbackRender={ErrorFallback}>
       {currentBuildingID && (
         <Map
-          // initialViewState={initialViewState}
+          initialViewState={initialViewState}
           buildings={buildings}
           currentBuilding={currentBuildingID}
           currentFloor={currentFloorID}
@@ -98,8 +105,7 @@ function App() {
             onSelect={onFloorSelect}
           />
 
-          {/* Commented form now as we dont have a initial view state we cannot change it */}
-          {/* <Toolbar
+          <MapToolbar
             onIncreaseZoom={() => {
               setInitialViewState({
                 ...initialViewState,
@@ -119,7 +125,7 @@ function App() {
               setCurrentBuildingID(currentBuildingID);
               // setBuildingView(building);
             }}
-          /> */}
+          />
         </>
       )}
     </ErrorBoundary>
