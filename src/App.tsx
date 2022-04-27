@@ -4,7 +4,6 @@ import { ErrorBoundary } from "react-error-boundary";
 
 import ErrorFallback from "./components/ErrorFallback";
 import Map from "./components/Map";
-import MapToolbar from "./components/MapToolbar";
 import FloorSelector from "./components/selectors/FloorSelector";
 import PoiSelector from "./components/selectors/PoiSelector";
 import { buildingFactoryFromJson } from "./domain/factories";
