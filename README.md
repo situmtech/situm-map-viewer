@@ -17,32 +17,28 @@ A Map Viewer using the [SITUM](https://www.situm.com/) SDK JS to show your build
 
 # What's in here
 
-This is a half-backed pet project to try out the Situm JS SDK (available via npm at https://www.npmjs.com/package/@situm/sdk-js).
+This project creates a web map viewer implementing some :
 
-This project shows you how to:
-
-- Connect to Situm backend using Situm JS SDK.
-- Retrieve information such as buildings, floors, POIs and POI categories.
-- Cross POI and POI category information (e.g. to show the category-icon of each POI)
-- Display the floorplan of the venue using Deck.gl (https://deck.gl/) appropriately rotated.
+- Retrieves information such as buildings, floors, POIs and POI categories.
+- Display the floorplan of the venue appropriately rotated.
 - Display the POIs on top of the floorplan.
-- Implement a basic Floor using Material UI (https://mui.com/), that changes the floor to be displayed.
-- Implement a basic POI selector using Material UI, that centers the view on the selected POI (changing floors if required).
-
-This project was tested with Situm JS SDK v0.0.4 and npm v8.1.2. The UI is thought to be executed on a mobile phone.
+- Implement a basic Floor selector, that changes the floor to be displayed.
+- Implement a basic POI selector, that centers the view on the selected POI (changing floors if required).
 
 # Getting started
 
-First of all,
+Below you can find the instructions to setup this project and run it locally
 
-1.  copy the environment file .env.development.dist to .env.development
-2.  change the .env.development contents with the appropriate values:
+1. copy the environment file .env.development.dist to .env.development
+2. change the .env.development contents with the appropriate values
 
 ```
 VITE_DOMAIN="https://dashboard.situm.com"
-VITE_EMAIL='email@email.com'
-VITE_APIKEY='1234'
+VITE_EMAIL='your-situm-account-email'
+VITE_APIKEY='your-situm-apikey'
 ```
+
+you can **optionally** change the `VITE_MAPBOX_API_KEY` to display an underlying map in the viewer
 
 Then, execute "npm install" and "npm start". You should see a new webpage appearing in your browser (localhost:3000)
 
