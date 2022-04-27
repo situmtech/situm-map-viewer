@@ -14,13 +14,12 @@ import React, { useEffect, useState } from "react";
 import { Map as StaticMap } from "react-map-gl";
 
 import { POI_CATEGORY_ICON_BACKGROUND } from "../domain/models";
-import {
-  getBaseFloorplan,
-  getFloorplanFromFloorId,
-  /*getCategorieById,*/
-} from "../domain/usecases";
+import { getBaseFloorplan, getFloorplanFromFloorId } from "../domain/usecases";
+
+import MapToolbar from "./MapToolbar";
 
 const MAPBOX_API_KEY = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN;
+
 const ambientLight = new AmbientLight({
   color: [255, 255, 255],
   intensity: 1.0,
@@ -114,8 +113,6 @@ const buildLayers = ({
           }),
         ])
       );
-
-    console.log(pois);
   }
 
   return layers;
@@ -127,7 +124,6 @@ const Map = ({
   currentFloor,
   selectedPoi,
   onPoiSelect,
-  initialViewState,
 }) => {
   const [effects] = useState(() => {
     const lightingEffect = new LightingEffect({ ambientLight, dirLight });
@@ -136,7 +132,7 @@ const Map = ({
   });
   const [mapCursor, setMapCursor] = useState("default");
 
-  const [initialViewStateInternal, setInitialViewState] = useState({
+  const [initialViewState, setInitialViewState] = useState({
     longitude: -122.519,
     latitude: 37.7045,
     zoom: 13,
@@ -174,7 +170,7 @@ const Map = ({
     const poi = building.pois.pois.find((p) => p.id == selectedPoi);
 
     setInitialViewState({
-      ...initialViewStateInternal,
+      ...initialViewState,
       longitude: poi.position.lng,
       latitude: poi.position.lat,
       zoom: 19,
@@ -194,11 +190,11 @@ const Map = ({
         selectedPoi,
       })
     );
-  }, [currentBuilding, buildings]);
+  }, [currentBuilding, buildings, initialViewState]);
 
   return (
     <DeckGL
-      initialViewState={initialViewStateInternal}
+      initialViewState={initialViewState}
       layers={layers}
       controller={{
         touchZoom: true,
@@ -210,7 +206,6 @@ const Map = ({
       onHover={(object) => !object.layer && setMapCursor("pointer")}
       getCursor={({ isDragging }) => {
         if (isDragging) {
-          // onDrag();
           return "grabbing";
         } else return mapCursor;
       }}
@@ -223,6 +218,27 @@ const Map = ({
           "https://basemaps.cartocdn.com/gl/positron-nolabels-gl-style/style.json"
         }
         reuseMaps={true}
+      />
+
+      <MapToolbar
+        onIncreaseZoom={() => {
+          console.log();
+          setInitialViewState({
+            ...initialViewState,
+            zoom: initialViewState.zoom + 1,
+          });
+        }}
+        onDecreaseZoom={() => {
+          setInitialViewState({
+            ...initialViewState,
+            zoom: initialViewState.zoom - 1,
+          });
+        }}
+        onCenter={() => {
+          alert("test");
+          // setCurrentBuildingID(null);
+          // setCurrentBuildingID(currentBuildingID);
+        }}
       />
     </DeckGL>
   );

@@ -16,13 +16,6 @@ const APIKEY: string = import.meta.env.VITE_APIKEY;
 const BUILDINGID: number = import.meta.env.VITE_BUILDINGID;
 
 function App() {
-  const [initialViewState, setInitialViewState] = useState({
-    longitude: 0,
-    latitude: 0,
-    zoom: 13,
-    pitch: 0,
-    bearing: 20,
-  });
   const [loading, setLoading] = useState<boolean>(true);
   const [buildings, setBuildings] = useState<any[]>([]);
   //const [poiCategories, setPoiCategories] = useState<any[]>([]);
@@ -73,7 +66,6 @@ function App() {
     <ErrorBoundary fallbackRender={ErrorFallback}>
       {currentBuildingID && (
         <Map
-          initialViewState={initialViewState}
           buildings={buildings}
           //poiCategories={poiCategories}
           currentBuilding={currentBuildingID}
@@ -107,28 +99,6 @@ function App() {
             currentBuilding={currentBuildingID}
             buildings={buildings}
             onSelect={onFloorSelect}
-          />
-
-          <MapToolbar
-            onIncreaseZoom={() => {
-              setInitialViewState({
-                ...initialViewState,
-                zoom: initialViewState.zoom + 1,
-              });
-            }}
-            onDecreaseZoom={() => {
-              setInitialViewState({
-                ...initialViewState,
-                zoom: initialViewState.zoom - 1,
-              });
-            }}
-            onCenter={() => {
-              const building = buildings.find((b) => b.id == currentBuildingID);
-
-              setCurrentBuildingID(null);
-              setCurrentBuildingID(currentBuildingID);
-              // setBuildingView(building);
-            }}
           />
         </>
       )}
