@@ -3,7 +3,7 @@
   "name": "Situm Map Viewer",
   "icons": [
     {
-      "src": "logoSitum.png",
+      "src": "images/logoSitum.png",
       "sizes": "64x64 32x32 24x24 16x16 192x192 512x512"
     }
   ],

@@ -4,83 +4,83 @@ export const POI_CATEGORY_ICON_BACKGROUND =
 
 const poiCategoryProperties = new Map([
   [
-    // Coffee
+    // Coffee OK
     1,
     {
-      url: "https://cdn-icons-png.flaticon.com/512/996/996289.png",
-      color: [140, 25, 25],
+      url: "images/coffee.png",
+      color: [255, 120, 0],
     },
   ],
   [
-    // Elevator
+    // Elevator OK
     2,
     {
-      url: "https://cdn-icons-png.flaticon.com/512/948/948747.png",
-      color: [0, 0, 0],
+      url: "images/elevator.png",
+      color: [127, 57, 212],
     },
   ],
   [
-    // Entrance
+    // Entrance OK
     3,
     {
-      url: "https://cdn-icons-png.flaticon.com/512/298/747335.png",
-      color: [128, 0, 128],
+      url: "images/entrance.png",
+      color: [127, 57, 212],
     },
   ],
   [
-    // Information
+    // Information OK
     4,
     {
-      url: "https://cdn-icons.flaticon.com/png/512/665/premium/665049.png",
-      color: [140, 25, 25],
-    },
-  ],
-  [
-    // Parking
-    5,
-    {
-      url: "https://cdn-icons.flaticon.com/png/512/2893/2893995.png",
-      color: [140, 25, 25],
-    },
-  ],
-  [
-    // Ramp
-    6,
-    {
-      url: "https://cdn-icons-png.flaticon.com/512/1512/1512713.png",
-      color: [0, 0, 0],
-    },
-  ],
-  [
-    // Shop
-    7,
-    {
-      url: "https://cdn-icons-png.flaticon.com/512/102/102665.png",
+      url: "images/information.png",
       color: [1, 191, 231],
     },
   ],
   [
-    // Stairs
-    8,
+    // Parking OK
+    5,
     {
-      url: "https://cdn-icons.flaticon.com/png/512/2641/2641951.png",
-      color: [0, 0, 0],
+      url: "images/parking.png",
+      color: [66, 70, 200],
     },
   ],
   [
-    // Toilet
+    // Ramp OK
+    6,
+    {
+      url: "images/ramp.png",
+      color: [127, 57, 212],
+    },
+  ],
+  [
+    // Shop OK
+    7,
+    {
+      url: "images/shop.png",
+      color: [19, 171, 93],
+    },
+  ],
+  [
+    // Stairs OK
+    8,
+    {
+      url: "images/stairs.png",
+      color: [127, 57, 212],
+    },
+  ],
+  [
+    // Toilet OK
     9,
     {
-      url: "https://cdn-icons-png.flaticon.com/512/185/185547.png",
-      color: [74, 165, 100],
+      url: "images/toilets.png",
+      color: [1, 191, 231],
     },
   ],
   [
     // No category
     "default",
     {
-      url: "https://cdn-icons.flaticon.com/png/512/3106/3106703.png",
-      color: [47, 43, 43],
+      url: "images/default.png",
+      color: [80, 80, 80],
     },
   ],
 ]);
