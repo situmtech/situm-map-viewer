@@ -2,6 +2,8 @@ import { CompositeLayer, IconLayer } from "deck.gl";
 
 import { POI_CATEGORY_ICON_BACKGROUND } from "../../domain/models";
 
+const ICON_SIZE = 96;
+
 export default class PoiLayer extends CompositeLayer {
   renderLayers() {
     return [
@@ -11,9 +13,9 @@ export default class PoiLayer extends CompositeLayer {
         pickable: true,
         getIcon: (d) => ({
           url: POI_CATEGORY_ICON_BACKGROUND,
-          width: 96,
-          height: 96,
-          anchorY: 96,
+          width: ICON_SIZE,
+          height: ICON_SIZE,
+          anchorY: ICON_SIZE,
           mask: true,
         }),
         sizeScale: 4,
@@ -27,8 +29,8 @@ export default class PoiLayer extends CompositeLayer {
         pickable: true,
         getIcon: (d) => ({
           url: d.category.iconUrl,
-          width: 96,
-          height: 96,
+          width: ICON_SIZE,
+          height: ICON_SIZE,
           anchorY: 128,
           mask: true,
         }),
